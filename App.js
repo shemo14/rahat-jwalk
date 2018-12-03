@@ -1,15 +1,33 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, I18nManager } from 'react-native';
+import Route from './src/routes';
+import './ReactotronConfig';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistedStore } from './src/store';
+import { Root } from "native-base";
+
 
 export default class App extends React.Component {
+
+  componentWillMount(){
+      I18nManager.forceRTL(true);
+  }
+
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
-    );
+      return (
+
+          <Provider store={store}>
+              <PersistGate persistor={persistedStore}>
+                  <Root>
+                      <Route/>
+                  </Root>
+              </PersistGate>
+          </Provider>
+      );
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {

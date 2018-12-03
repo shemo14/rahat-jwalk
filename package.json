@@ -14,6 +14,12 @@
     "native-base": "^2.8.1",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
+    "react-native-circular-progress": "^1.0.1",
+    "react-native-communications": "^2.2.1",
+    "react-native-loader": "^1.2.1",
+    "react-native-modal": "^7.0.0",
+    "react-native-onesignal": "^3.2.8",
+    "react-native-svg": "^8.0.8",
     "react-navigation": "^2.18.2",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
@@ -21,6 +27,8 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.0.0"
+    "babel-preset-expo": "^5.0.0",
+    "reactotron-react-native": "^2.1.0",
+    "reactotron-redux": "^2.1.0"
   }
 }
