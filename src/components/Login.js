@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, KeyboardAvoidingView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Image, TouchableOpacity, AsyncStorage } from 'react-native';
 import { Container, Button, Content, Form, Item, Input, Icon, Toast } from 'native-base';
 import { Spinner } from '../common'
 import { connect } from 'react-redux';
-import { userLogin } from '../actions'
+import { userLogin, profile } from '../actions'
 
 
 class Login extends Component{
@@ -25,21 +25,26 @@ class Login extends Component{
             this.setState({ loader: true });
             const {phone, password} = this.state;
             this.props.userLogin({ phone, password });
-
-            Toast.show({
-                text: this.props.auth.massage,
-                type: this.props.auth.key === "1" ? "success" : "danger",
-                duration: 3000
-            });
-
         }
+
     }
 
     componentWillReceiveProps(newProps){
-        if (newProps.auth.key === "1"){
+
+        if (newProps.auth !== null && newProps.auth.key === "1"){
+			this.props.profile(newProps.auth.data.id);
             this.props.navigation.navigate('drawerNavigation');
         }
-        this.setState({ loader: false });
+        
+        if (newProps.auth !== null) {
+			Toast.show({
+				text: newProps.auth.massage,
+				type: newProps.auth.key === "1" ? "success" : "danger",
+				duration: 3000
+			});
+        }
+
+		this.setState({ loader: false });
     }
 
     validate = () => {
@@ -143,9 +148,8 @@ class Login extends Component{
 
 const mapStateToProps = ({ auth }) => {
     return {
-        message: auth.message,
         loading: auth.loading,
-        auth: auth.user
+        auth: auth.user,
     };
 };
-export default connect(mapStateToProps, { userLogin })(Login);
+export default connect(mapStateToProps, { userLogin, profile })(Login);

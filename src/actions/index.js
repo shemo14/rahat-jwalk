@@ -1,1 +1,1 @@
-export * from './AuthAction'
+export * from './AuthAction'export * from './ProfileAction'

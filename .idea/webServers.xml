@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="5e0db591-df82-4135-a221-ec51cfb5207c" name="tahader" url="http://c.mta.sa">
+        <fileTransfer host="c.mta.sa" port="21" rootFolder="/public_html">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="643d570f-653f-4fb6-a81e-a6f356ba21d6" name="camy" url="http://gator3155.hostgator.com">
+        <fileTransfer host="gator3155.hostgator.com" port="21" rootFolder="/public_html">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="b320066d-8428-4fce-9be0-0b2168828199" name="rahat-jwalk" url="http://rahat.aait-sa.com">
+        <fileTransfer host="rahat.aait-sa.com" port="21" rootFolder="/public_html">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

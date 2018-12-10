@@ -5,7 +5,10 @@
     "slug": "rahat-jwalk",
     "privacy": "public",
     "sdkVersion": "31.0.0",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,7 +24,24 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.rahat.jwalk",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.rahat.jwalk",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBEg8hO6EtdKI7MF7hqwo3PkYqqe0mweZU"
+        }
+      },
+      "permissions": [
+        "READ_EXTERNAL_STORAGE"
+      ]
     }
   }
 }
+
+
+//  Keystore password: 371df55628b84bfba2bf6a8aec30ffe8
+//  Key alias:         QG1fc2hhbXMvcmFoYXQtandhbGs=
+//  Key password:      cfbbaafe948a449ab88ed48f60589df4

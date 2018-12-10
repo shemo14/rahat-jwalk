@@ -13,8 +13,21 @@ export const userLogin = ({phone, password}) => {
 };
 
 
+export const userLogout = ({ user_id }) => {
+	return (dispatch) => {
+		dispatch({type: 'user_logout'});
+
+		axios.post( CONST.url + 'logout', { user_id })
+			.then(() => {
+				AsyncStorage.clear();
+			})
+			.catch(error => console.warn(error.data));
+	};
+};
+
+
 const handelLogin = (dispatch, data) => {
-    if (data.key === 0){
+    if (data.key === "0"){
         loginFailed(dispatch, data)
     }else{
         loginSuccess(dispatch, data)
@@ -23,8 +36,8 @@ const handelLogin = (dispatch, data) => {
 
 
 const loginSuccess = (dispatch, data) => {
-    AsyncStorage.multiSet([['user_id', JSON.stringify(data.id)], ['user', JSON.stringify(data)]])
-        .then(() => dispatch({type: 'login_success', data}));
+    AsyncStorage.setItem('user_id', JSON.stringify(data.data.id))
+        .then(() => dispatch({type: 'login_success', data }));
 
     dispatch({type: 'login_success', data});
 };

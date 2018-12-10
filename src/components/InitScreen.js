@@ -10,13 +10,14 @@ class InitScreen extends Component{
     }
 
     componentWillMount = async () => {
-        if (this.props.auth !== null)
+        // AsyncStorage.clear();
+        console.log(this.props.profile);
+        if (this.props.auth !== null && this.props.auth.key !== '0')
             this.props.navigation.navigate('drawerNavigation');
         else
             this.props.navigation.navigate('login');
 
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
-
 
     };
 
@@ -27,11 +28,12 @@ class InitScreen extends Component{
 
 
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, profile }) => {
     return {
         message: auth.message,
         loading: auth.loading,
-        auth: auth.user
+        auth: auth.user,
+        user: profile
     };
 };
 export default connect(mapStateToProps)(InitScreen);

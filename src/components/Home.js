@@ -35,7 +35,6 @@ class Home extends Component{
             );
         }
 
-        console.log('locations ', this.state.binsLocations, this.state.userLocation);
         return (
             <MapView
                 style={{ flex: 1 }}
@@ -51,9 +50,9 @@ class Home extends Component{
                     coordinate={{ latitude: this.state.userLocation.latitude, longitude: this.state.userLocation.longitude }}
                     title={'موقعك الحالي'}
                 />
-                {/*{*/}
-                    {/*this.state.binsLocations.map(location => (<MapView.Marker coordinate={{ latitude: location.lat, longitude: location.lng }}/>))*/}
-                {/*}*/}
+                {
+                    this.state.binsLocations.map((location, i) => (<MapView.Marker key={i} coordinate={{ latitude: Number(location.lat), longitude: Number(location.lng) }}/>))
+                }
             </MapView>
         );
     }
@@ -88,11 +87,8 @@ class Home extends Component{
         this.setState({  initMap: false, userLocation });
 
         axios.post(CONST.url + 'show/map/data', { user_id: this.props.auth.data.id, lat: this.state.userLocation.latitude, lng: this.state.userLocation.longitude }).then(response => {
-            this.setState({ binsLocations: response.data.other_data });
-            console.log(response.data);
+            this.setState({ binsLocations: response.data.data.other_data });
         });
-
-        console.log(this.state.userLocation.latitude, this.state.userLocation.longitude);
     }
 
     render(){

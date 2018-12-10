@@ -31,6 +31,7 @@ class DeterminedLocation extends Component{
         drawerLabel: ()=> null,
     });
 
+
     async componentDidMount(){
         const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({});
         const userLocation = { latitude, longitude };
@@ -169,8 +170,16 @@ class DeterminedLocation extends Component{
             return(<Spinner />);
         }
 
+        if (this.state.selectedLocation === null){
+			return (
+				<Button disabled block disabled style={{marginTop: 20, marginBottom: 20, width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} light >
+					<Text style={{color: '#999', fontSize: 17, textAlign: 'center' }}>تأكيد</Text>
+				</Button>
+			);
+        }
+
         return (
-            <Button disabled={this.state.selectedLocation === [] ? true : false} block style={{marginTop: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', bottom: 20}} onPress={() => { this.onLocationSelected()  }} primary>
+            <Button block style={{marginTop: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', bottom: 20}} onPress={() => { this.onLocationSelected()  }} primary>
                 <Text style={{color: '#fff', fontSize: 17, textAlign: 'center'}}>تأكيد</Text>
             </Button>
         );

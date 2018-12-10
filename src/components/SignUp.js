@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, KeyboardAvoidingView, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
-import { Container, Button, Content, Form, Item, Input, Icon, Header, Body, List, ListItem } from 'native-base';
+import { View, Text, KeyboardAvoidingView, Image, ScrollView, Dimensions } from 'react-native';
+import { Container, Button, Content, Form, Item, Input, Icon, Header, Body, List, ListItem, Toast } from 'native-base';
 import { Spinner } from '../common'
 import { Font } from 'expo'
 import Modal from "react-native-modal"
 import CONST from "../consts";
 import axios from "axios/index";
 import { DoubleBounce } from 'react-native-loader'
-import { MapView, Location } from 'expo'
+import { MapView, Location, Permissions } from 'expo'
+import { userLogin, profile } from '../actions'
+import { connect } from 'react-redux';
 
 const height = Dimensions.get('window').height;
 class SignUp extends Component{
@@ -17,7 +19,7 @@ class SignUp extends Component{
         this.state= {
             name: '',
             phone: '',
-            email: '',
+            email: null,
             password: '',
             lat: '',
             lng: '',
@@ -33,13 +35,16 @@ class SignUp extends Component{
             userLocation: [],
             initMap: true,
             loader: false,
+			showToast: false,
         };
     }
 
-    componentWillMount(){
+    componentWillMount = async () => {
         axios.post(CONST.url + 'condition').then(response => {
             this.setState({ roles: response.data.data })
         })
+
+		let { status } = await Permissions.askAsync(Permissions.LOCATION);
     }
 
     setModalVisible(visible) {
@@ -58,10 +63,18 @@ class SignUp extends Component{
         if (this.state.loader){
             return(<Spinner />);
         }
+        
+        if (this.state.name === '' || this.state.phone === '' || this.state.selectedLocation === null || this.state.password === '' || this.state.confirmPassword === ''){
+			return (
+				<Button block disabled style={{marginTop: 20, width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} light>
+					<Text style={{color: '#999', fontSize: 17, textAlign: 'center', fontFamily: 'JFlat' }}>التسجيل</Text>
+				</Button>
+			);
+        }
 
         return (
-            <Button block style={{marginTop: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} onPress={() => { this.onLoginPressed()  }} primary>
-                <Text style={{color: '#fff', fontSize: 17, textAlign: 'center', fontFamily: 'JFlat' }}>التسجل</Text>
+            <Button block style={{marginTop: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} onPress={() => { this.signUp()  }}>
+                <Text style={{color: '#fff', fontSize: 17, textAlign: 'center', fontFamily: 'JFlat' }}>التسجيل</Text>
             </Button>
         );
     }
@@ -175,8 +188,8 @@ class SignUp extends Component{
                 ref={map => this.map = map}
                 style={{ flex: 1 }}
                 initialRegion={{
-                    latitude: this.state.userLocation.latitude,
-                    longitude: this.state.userLocation.longitude,
+					latitude: 37.78825,
+					longitude: -122.4324,
                     latitudeDelta: 0.422,
                     longitudeDelta: 0.121,
                 }}
@@ -203,17 +216,63 @@ class SignUp extends Component{
     }
 
     signUp(){
-        axios.post(CONST.url + {
-            name: this.state,
-            phone: this.state,
-            password: this.state,
+		let msg = '';
+    	if (this.state.password.length < 6) {
+    		msg = 'كلمة المرور اقل من ٦ احرف';
+		}else if ( this.state.email !== '' && this.state.email !== null && this.state.email.indexOf("@") === -1){
+			msg = 'البريد الالكتروني غير صحيح' ;
+		}else if (this.state.password !== this.state.confirmPassword){
+			msg = 'كلمة المرور و تأكيد كلمة المرور غير متطابق' ;
+		}
+
+    	if (msg !== ''){
+			Toast.show({
+				text: msg,
+				type: "danger",
+				duration: 3000
+			});
+
+			return <View/>
+		}
+
+		this.setState({ loader: true });
+        axios.post(CONST.url + 'register' ,{
+            name: this.state.name,
+            phone: this.state.phone,
+            password: this.state.password,
             city: this.state.selectedLocation.name,
             lat: this.state.selectedLocation.latitude,
             lng: this.state.selectedLocation.longitude,
             email: this.state.email,
             device_id: Expo.Constants.deviceId
-        })
+        }).then(response => {
+			this.setState({ loader: false });
+
+			const {phone, password} = this.state;
+			this.props.userLogin({ phone, password });
+
+			Toast.show({
+				text: response.data.massage,
+				type: response.data.key === "1" ? "success" : "danger",
+				duration: 3000
+			});
+		}).catch(e => {
+			this.setState({ loader: false });
+			Toast.show({
+				text: 'يوجد خطأ ما الرجاء المحاولة مرة اخري',
+				type: "danger",
+				duration: 3000
+			});
+		})
     }
+
+	componentWillReceiveProps(newProps){
+		if (newProps.auth.key === "1"){
+			this.props.navigation.navigate('drawerNavigation');
+			this.props.profile(newProps.auth.data.id);
+		}
+		this.setState({ loader: false });
+	}
 
     render(){
         if (!this.state.fontLoaded){
@@ -257,7 +316,7 @@ class SignUp extends Component{
                                     marginLeft: 0
                                 }}>
                                     <Icon style={{color: '#277c19', fontSize: 20 }} name={'phone'} type={'FontAwesome'}/>
-                                    <Input autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(phone) => this.setState({phone})} style={{ alignSelf: 'flex-end' }} placeholder='رقم الهاتف' value={this.state.phone}/>
+                                    <Input keyboardType='phone-pad' placeholderStyle={{ textAlign: 'right' }} onChangeText={(phone) => this.setState({phone})} style={{ alignSelf: 'flex-end' }} placeholder='رقم الهاتف' value={this.state.phone}/>
                                 </Item>
                                 <Text style={{
                                     color: '#ff0000',
@@ -276,7 +335,7 @@ class SignUp extends Component{
                                     marginLeft: 0
                                 }}>
                                     <Icon style={{color: '#277c19', fontSize: 20 }} name={'location'} type={'Entypo'}/>
-                                    <Input disabled autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(city) => this.setState({city})} style={{ alignSelf: 'flex-end', color: '#277c19', height: 35 }} placeholder='المدينة' value={ this.state.selectedLocation !== null && this.state.selectedLocation !== [] ? this.state.selectedLocation.name : ''}/>
+                                    <Input disabled autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} style={{ alignSelf: 'flex-end', color: '#277c19', height: 35 }} placeholder='المدينة' value={ this.state.selectedLocation !== null && this.state.selectedLocation !== [] ? this.state.selectedLocation.name : ''}/>
                                 </Item>
                                 <Text style={{
                                     color: '#ff0000',
@@ -403,4 +462,11 @@ class SignUp extends Component{
     }
 }
 
-export default SignUp;
+const mapStateToProps = ({ auth }) => {
+	return {
+		message: auth.message,
+		loading: auth.loading,
+		auth: auth.user
+	};
+};
+export default connect(mapStateToProps, { userLogin, profile })(SignUp);

@@ -20,8 +20,8 @@ class FinishedOrder extends Component{
     }
 
     static navigationOptions = () => ({
-        drawerLabel: 'الطلبات المنتهيه',
-        drawerIcon: ( <Icon style={{ fontSize: 20, color: '#437c1a' }} type={'MaterialCommunityIcons'} name={'folder-remove'}/> )
+        drawerLabel: 'الطلبات السابقة',
+        drawerIcon: ( <Icon style={{ fontSize: 20, color: '#437c1a' }} type={'MaterialCommunityIcons'} name={'folder-move'}/> )
     });
 
     componentWillMount(){
@@ -108,7 +108,7 @@ class FinishedOrder extends Component{
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>
-                    <Text style={{ color: '#fff', textAlign: 'center', marginRight: 20, fontSize: 18 }}>الطلبات المنتهيه</Text>
+                    <Text style={{ color: '#fff', textAlign: 'center', marginRight: 20, fontSize: 18 }}>الطلبات السابقة</Text>
                     </Body>
                     <Left style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.goBack()}>

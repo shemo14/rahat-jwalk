@@ -3,8 +3,8 @@ import {Image, View, Text, TouchableOpacity, ImageBackground, AsyncStorage } fro
 import {Container, Footer, Content, Body } from 'native-base';
 import { DrawerItems } from 'react-navigation';
 import {connect} from "react-redux";
-import axios from 'axios';
-import CONST from "../consts";
+
+
 
 class DrawerCustomization extends Component {
     constructor(props){
@@ -13,20 +13,20 @@ class DrawerCustomization extends Component {
             user: [],
             lang: 'en'
         }
+
+        console.log('this fuck cons');
     }
 
-    logout(){
-        axios.post(CONST.url + 'logout', { user_id: this.props.auth.data.id }).then(response => {
-            if (response.data.key === 1){
-                AsyncStorage.clear();
-                this.props.navigation.navigate('login');
-            }
-        })
+	async logout(){
+		this.props.navigation.navigate('login');
+        AsyncStorage.clear();
     }
 
 
-    render(){
-        const { data } = this.props.auth;
+
+	render(){
+        const { user } = this.props;
+        // console.log(user);
 
         return(
             <Container style={{ overflow: 'visible' }}>
@@ -34,9 +34,9 @@ class DrawerCustomization extends Component {
                     <View style={styles.drawerHeader}>
                         <Body style={{ alignItems: 'center' }}>
                             <View style={styles.profileContainer}>
-                                <Image style={styles.profileImage} source={{ uri: data.image }} />
+                                <Image style={styles.profileImage} source={{ uri: user.image }} />
                                 <TouchableOpacity style={styles.authContainer} onPress={() => this.props.navigation.navigate('profile')}>
-                                    <Text onPress={() => this.props.navigation.navigate('profile')} style={styles.usernameText}>{ data.name }</Text>
+                                    <Text onPress={() => this.props.navigation.navigate('profile')} style={styles.usernameText}>{ user.name }</Text>
                                 </TouchableOpacity>
                             </View>
                         </Body>
@@ -44,14 +44,15 @@ class DrawerCustomization extends Component {
                 </View>
                 <Content>
                     <DrawerItems {...this.props} labelStyle={{color: '#9c9c9c', margin: 10, right: 15}} onItemPress={
-                        (route, focused) => {
-                            if (route.route.key === 'logout') {
-                                this.logout()
-                            }else {
-                                this.props.navigation.navigate(route.route.key);
+                            (route, focused) => {
+                                if (route.route.key === 'logout') {
+                                    this.logout()
+                                }else {
+                                    this.props.navigation.navigate(route.route.key);
+                                }
                             }
                         }
-                    }
+						items={this.props.auth !== null && this.props.user.provider === "1" ? this.props.items.filter((item) => item.routeName !== 'joinToProvider') : this.props.items.filter((item) => item.routeName !== 'newOrders' && item.routeName !== 'commission')  }
                     />
                     <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center', flex: 1 }}>
                         <TouchableOpacity style={{ padding: 3 }}>
@@ -65,9 +66,9 @@ class DrawerCustomization extends Component {
                         </TouchableOpacity>
                     </View>
                 </Content>
-                {/*<TouchableOpacity style={{ position: 'absolute' }}>*/}
-                    {/*<Image style={{ width: 50, height: 50 }} source={require('../../assets/images/button.png')} />*/}
-                {/*</TouchableOpacity>*/}
+                    <TouchableOpacity style={{ position: 'absolute', left: 250, top: '45%' }}>
+                        <Image style={{ width: 50, height: 50 }} source={require('../../assets/images/button.png')} />
+                    </TouchableOpacity>
                 <Footer style={{ backgroundColor: '#fff' }}>
                     <ImageBackground resizeMode={'cover'} style={{ width: '100%', height: 140, bottom: -6, position: 'absolute' }} source={require('../../assets/images/Vector_Smart_Object2.png')}/>
                 </Footer>
@@ -75,6 +76,7 @@ class DrawerCustomization extends Component {
         );
     }
 }
+
 
 const styles = {
     container: {
@@ -136,9 +138,10 @@ const styles = {
     },
 };
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, profile }) => {
     return {
-        auth: auth.user
+        auth: auth.user,
+        user: profile.user
     };
 };
 

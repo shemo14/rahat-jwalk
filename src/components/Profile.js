@@ -1,24 +1,46 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, TouchableOpacity, Image } from 'react-native';
-import { Button, Icon, Container, Header, Right, Body, Content, Left, List, ListItem, CheckBox, Input, Form } from 'native-base';
+import {View, Text, Dimensions, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { Button, Icon, Container, Header, Right, Body, Content, Left, List, ListItem, CheckBox, Input, Form, Toast } from 'native-base';
 import CONST from "../consts";
 import axios from "axios/index";
 import { DoubleBounce } from 'react-native-loader';
 import {connect} from "react-redux";
 import Services from "./Services";
 import {Spinner} from "../common";
+import { ImagePicker } from 'expo';
+import Modal from "react-native-modal"
+import { MapView, Location } from 'expo'
+import { updateProfile } from '../actions/ProfileAction'
 
 
+
+const height = Dimensions.get('window').height;
 class Profile extends Component{
     constructor(props){
         super(props);
         this.state = {
-            name: this.props.auth.data.name,
-            city: this.props.auth.data.city,
-            email: this.props.auth.data.email,
-            password: '',
-            confirmPassword: '',
-            loader: false
+            name: this.props.profile.name,
+            city: this.props.profile.city,
+            email: this.props.profile.email,
+            phone: this.props.profile.phone,
+            password: null,
+            confirmPassword: null,
+            loader: false,
+			userImage: null,
+			mapModal: null,
+			query: '',
+			searchResult: null,
+			selectedLocation: null,
+			userLocation: [],
+			initMap: true,
+			showToast: false,
+            base64: null,
+			mob_maintenance: 0,
+			mob_seller: 0,
+			accessories_seller: 0,
+			sim_card: 0,
+			lat: this.props.profile.lat,
+			lng: this.props.profile.lng,
         }
     }
 
@@ -27,27 +49,276 @@ class Profile extends Component{
     });
 
     renderProviderServices(){
-        if (this.props.auth.data.provider === "0"){
-            return <Services/>
+        if (this.props.profile.provider === "1"){
+            return (
+				<View>
+					<View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
+						<Icon type={'Entypo'} name={'tools'} style={{ color: '#82b37d', marginRight: 5, top: 3 }}/>
+						<Text style={{ color: '#82b37d', textAlign: 'center' }}>الخدمات التي ترغب في تقديمها</Text>
+					</View>
+
+					<List>
+						<ListItem onPress={() => this.state.mob_maintenance === 1 ? this.setState({ mob_maintenance: 0 }) : this.setState({ mob_maintenance: 1 })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+							<Left style={{ flex: 1 }}>
+								<Icon type={'Ionicons'} name={'ios-settings'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
+								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>صيانة</Text>
+							</Left>
+							<Right style={{ flex: 1 }}>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_maintenance === 1 ? true : false} onPress={() => this.state.mob_maintenance === 1 ? this.setState({ mob_maintenance: 0 }) : this.setState({ mob_maintenance: 1 })} color="#437c1a"/>
+							</Right>
+						</ListItem>
+
+						<ListItem onPress={() => this.state.mob_seller === 1 ? this.setState({ mob_seller: 0 }) : this.setState({ mob_seller: 1 })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+							<Left style={{ flex: 1 }}>
+								<Icon type={'Entypo'} name={'mobile'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
+								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>بيع جولات</Text>
+							</Left>
+							<Right style={{ flex: 1 }}>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_seller === 1 ? true : false} onPress={() => this.state.mob_seller === 1 ? this.setState({ mob_seller: 0 }) : this.setState({ mob_seller: 1 })} color="#437c1a"/>
+							</Right>
+						</ListItem>
+
+						<ListItem onPress={() => this.state.accessories_seller === 1 ? this.setState({ accessories_seller: 0 }) : this.setState({ accessories_seller: 1 })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+							<Left style={{ flex: 1 }}>
+								<Icon type={'MaterialCommunityIcons'} name={'cellphone-screenshot'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
+								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>بيع اكسسوارات</Text>
+							</Left>
+							<Right style={{ flex: 1 }}>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.accessories_seller === 1 ? true : false} onPress={() => this.state.accessories_seller === 1 ? this.setState({ accessories_seller: 0 }) : this.setState({ accessories_seller: 1 })} color="#437c1a"/>
+							</Right>
+						</ListItem>
+
+						<ListItem onPress={() => this.state.sim_card === 1 ? this.setState({ sim_card: 0 }) : this.setState({ sim_card: 1 }) } noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+							<Left style={{ flex: 1 }}>
+								<Icon type={'MaterialIcons'} name={'sim-card'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
+								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>شرائح بيانات</Text>
+							</Left>
+							<Right style={{ flex: 1 }}>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.sim_card === 1 ? true : false} onPress={() => this.setInstallation()} color="#437c1a"/>
+							</Right>
+						</ListItem>
+					</List>
+				</View>
+			);
         }
     }
 
-    renderLoading(){
-        if (this.state.loader){
-            return(<Spinner />);
-        }
+	_pickImage = async () => {
+		let result = await ImagePicker.launchImageLibraryAsync({
+			allowsEditing: true,
+			aspect: [4, 3],
+			base64: true,
+		});
 
-        return (
-            <Button block style={{marginTop: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', marginBottom: 30}} onPress={() => { this.onLoginPressed()  }} primary>
-                <Text style={{color: '#fff', fontSize: 17, textAlign: 'center'}}>حفظ</Text>
-            </Button>
-        );
-    }
+		if (!result.cancelled) {
+			this.setState({ userImage: result.uri, base64: result.base64 });
+		}
+	};
+
+	renderLoading(){
+		if (this.state.loader){
+			return(<Spinner />);
+		}
+
+		if (this.state.name === '' || this.state.phone === '' || this.state.city === '' ){
+			return (
+				<Button block disabled style={{marginTop: 20, marginBottom: 20, width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} light>
+					<Text style={{color: '#999', fontSize: 17, textAlign: 'center' }}>تعديل</Text>
+				</Button>
+			);
+		}
+
+		return (
+			<Button block style={{marginTop: 20, marginBottom: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} onPress={() => { this.signUp()  }}>
+				<Text style={{color: '#fff', fontSize: 17, textAlign: 'center' }}>تعديل</Text>
+			</Button>
+		);
+	}
+
+	async componentDidMount(){
+		const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({});
+		const userLocation = { latitude, longitude };
+		this.setState({  initMap: false, userLocation });
+
+		console.log(this.state.userLocation.latitude, this.state.userLocation.longitude);
+	}
+
+	search = async () => {
+
+		let endPoint = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=';
+		endPoint += this.state.query;
+		endPoint += '&key=AIzaSyBPftOQyR7e_2mv9MRu-TeNoW2qaOEK0fw&language=ar';
+
+		try {
+			const { data } = await axios.get(endPoint);
+			this.setState({ searchResult: data.results });
+			console.log(this.state.searchResult)
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	toggleSearchResult() {
+		if (!this.state.searchResult) return;
+
+		return (
+			<ScrollView style={{ backgroundColor: '#fff', maxHeight: 200, marginBottom: 20, position: 'absolute', width: '88%', top: 35, left: 40, zIndex: 99999999999 }}>
+				<List containerStyle={{ marginHorizontal: 15 }}>
+					{
+						this.state.searchResult.map((item, i) => (
+							<ListItem
+								style={{ paddingHorizontal: 5 }}
+								key={i}
+								onPress={this.setSelectedLocation.bind(this, item)}
+							>
+								<Icon style={{ color: '#ddd', fontSize: 22, marginRight: 5, marginTop: 5 }} type={'Entypo'} name={'location-pin'}/>
+								<Body>
+								<Text>{item.name}</Text>
+								<Text style={{ color: '#999' }}>{item.formatted_address}</Text>
+								</Body>
+							</ListItem>
+						))
+					}
+				</List>
+			</ScrollView>
+		);
+	}
+
+	setSelectedLocation(item) {
+		const { geometry: { location } } = item;
+
+		const formattedItem = {
+			name: item.name,
+			address: item.formatted_address,
+			latitude: location.lat,
+			longitude: location.lng
+		};
+
+		this.setState({ searchResult: null, selectedLocation: formattedItem, btnDisabled: false, city: formattedItem.name, lat: formattedItem.latitude, lng: formattedItem.longitude  });
+
+		this.map.animateToRegion(
+			{
+				latitude: formattedItem.latitude,
+				longitude: formattedItem.longitude,
+				latitudeDelta: 0.0922,
+				longitudeDelta: 0.0421,
+			},
+			350
+		);
+	}
+
+	showMapMarker() {
+		if (!this.state.selectedLocation){
+			const { latitude, longitude } = this.state.userLocation;
+			return (
+				<MapView.Marker
+					title={'موقعك الحالي'}
+					image={require('../../assets/images/maps-and-flags.png')}
+					coordinate={{ latitude, longitude }}
+				/>
+			);
+		}
+
+		const { latitude, longitude, name } = this.state.selectedLocation;
+		return (
+			<MapView.Marker
+				title={name}
+				image={require('../../assets/images/maps-and-flags.png')}
+				coordinate={{ latitude, longitude }}
+			/>
+		);
+	}
+
+	renderLoader(){
+		if (this.state.initMap){
+			return (
+				<View style={{ alignItems: 'center', justifyContent: 'center', height: 500 }}>
+					<DoubleBounce size={20} color="#437c1a" />
+				</View>
+			);
+		}
+
+		return (
+			<MapView
+				ref={map => this.map = map}
+				style={{ flex: 1 }}
+				initialRegion={{
+					latitude: this.state.userLocation.latitude,
+					longitude: this.state.userLocation.longitude,
+					latitudeDelta: 0.422,
+					longitudeDelta: 0.121,
+				}}
+			>
+				{ this.showMapMarker() }
+			</MapView>
+		);
+	}
+
+	renderLocationSetter(){
+		if (this.state.selectedLocation === [] || this.state.selectedLocation === null){
+			return(
+				<Button block style={{marginTop: 10, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', bottom: 5}} onPress={() => this.setState({ mapModal: null }) }>
+					<Text style={{color: '#fff', fontSize: 17, textAlign: 'center'}}>اغلاق</Text>
+				</Button>
+			);
+		}
+
+		return (
+			<Button block style={{marginTop: 10, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', bottom: 5}} onPress={() => this.setState({ mapModal: null }) } primary>
+				<Text style={{color: '#fff', fontSize: 17, textAlign: 'center'}}>تأكيد</Text>
+			</Button>
+		);
+	}
+
+	signUp(){
+		let msg = '';
+		if (this.state.password !== null && this.state.password.length < 6) {
+			msg = 'كلمة المرور اقل من ٦ احرف';
+		}else if ( this.state.email !== '' && this.state.email !== null && this.state.email.indexOf("@") === -1){
+			msg = 'البريد الالكتروني غير صحيح' ;
+		}else if (this.state.password !== this.state.confirmPassword){
+			msg = 'كلمة المرور و تأكيد كلمة المرور غير متطابق' ;
+		}
+
+		if (msg !== ''){
+			Toast.show({
+				text: msg,
+				type: "danger",
+				duration: 3000
+			});
+
+			return <View/>
+		}
+
+		const data = {
+			id: this.props.profile.id,
+			name: this.state.name,
+			phone: this.state.phone === this.props.profile.phone ? null : this.state.phone,
+			password: this.state.password,
+			city: this.state.city,
+			lat: this.state.lat,
+			lng: this.state.lng,
+			image: this.state.base64,
+			email: this.state.email === this.props.profile.email ? null : this.state.email,
+			device_id: Expo.Constants.deviceId,
+			mob_maintenance: this.state.mob_maintenance,
+			mob_seller: this.state.mob_seller,
+			accessories_seller: this.state.accessories_seller,
+			sim_card: this.state.sim_card
+		};
+
+		this.setState({ loader: true });
+		this.props.updateProfile(data);
+
+	}
+
+	componentWillReceiveProps(newProps){
+		this.setState({ loader: false });
+	}
 
     render(){
-        const { data } = this.props.auth;
-
-        console.log(data);
+        const data = this.props.profile;
+		let { userImage } = this.state;
 
         return(
             <Container>
@@ -68,7 +339,9 @@ class Profile extends Component{
                 </Header>
                 <Content style={{ padding: 10 }}>
                     <View>
-                        <Image source={{ uri: data.image }} style={{ height: 100, width: 100, alignSelf: 'center' ,marginTop: 20, borderRadius: 80, borderWidth: 1, borderColor: '#f4f4f4', marginBottom: 20 }}/>
+						<TouchableOpacity onPress={this._pickImage} style={{ justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#ddd', borderRadius: 55, padding: 3, width: 100, height: 100, alignSelf: 'center', marginBottom: 20 }}>
+							{userImage != null ? <Image source={{ uri: userImage }} style={{ width: 100, height: 100, marginTop: 20, borderRadius: 80, borderWidth: 1, borderColor: '#f4f4f4', marginBottom: 20 }} /> : <Image onPress={this._pickImage} source={{ uri: data.image }} style={{ height: 100, width: 100, alignSelf: 'center' ,marginTop: 20, borderRadius: 80, borderWidth: 1, borderColor: '#f4f4f4', marginBottom: 20 }}/> }
+						</TouchableOpacity>
 
                         <View>
                             <Form>
@@ -77,10 +350,17 @@ class Profile extends Component{
                                     <Input onChangeText={(name) => this.setState({name})} value={this.state.name} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
                                 </View>
 
-                                <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+                                <View style={{ flexDirection: 'row', marginBottom: 10 }} >
                                     <Text style={{ flex: 2 }}>المدينة :</Text>
-                                    <Input onChangeText={(city) => this.setState({city})} value={this.state.city} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
+									<TouchableOpacity style={{ flex: 4 }} onPress={() => this.setState({ mapModal: 1 })}>
+										<Input disabled onChangeText={(city) => this.setState({city})} value={this.state.city} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, width: '100%' }}/>
+									</TouchableOpacity>
                                 </View>
+
+								<View style={{ flexDirection: 'row', marginBottom: 10 }}>
+									<Text style={{ flex: 2 }}>الهاتف :</Text>
+									<Input onChangeText={(phone) => this.setState({phone})} value={this.state.phone} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
+								</View>
 
                                 <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                                     <Text style={{ flex: 2 }}>الايميل :</Text>
@@ -102,6 +382,37 @@ class Profile extends Component{
 
                             { this.renderLoading() }
                         </View>
+
+						<Modal isVisible={this.state.mapModal === 1} onBackdropPress={() => this.setState({ mapModal: null })}>
+							<View style={{ backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', borderRadius: 10, height: (80/100)*height , borderColor: 'rgba(0, 0, 0, 0.1)', }}>
+								<Header style={{ backgroundColor: '#437c1a', alignItems: 'center', width: '100%', height: 40, top: -8, borderTopRightRadius: 10, borderTopLeftRadius: 10 }}>
+									<Body style={{ flex: 1, alignItems: 'center' }}>
+									<Text style={{ textAlign: 'center', color: '#fff', fontSize: 20 }}>تحديد الموقع</Text>
+									</Body>
+								</Header>
+
+								<Content style={{ padding: 10 }}>
+									<View style={{ flex: 1, marginTop: 20 }}>
+										<View style={{ flexDirection: 'row', marginBottom: 20 }}>
+											<Text style={{ color: '#747474', marginTop: 5, fontSize: 17 }}>موقعك : </Text>
+											<View style={{ flexDirection: 'row', backgroundColor: '#f4f4f4', borderWidth: 1, height: 35,borderColor: '#ededed', borderRadius: 5, width: '80%' }}>
+												<Icon style={{ color: '#4a862f', fontSize: 22, marginRight: 5, marginTop: 5 }} type={'Entypo'} name={'location-pin'}/>
+												<Input onChangeText={(query) => this.setState({ query })} onSubmitEditing={() => this.search()} style={{ width: '100%', paddingBottom: 20 }} placeholderStyle={{ color: '#d4d4d4' }} placeholder='حدد موقعك'/>
+											</View>
+											{ this.toggleSearchResult() }
+
+										</View>
+										<View style={{ borderColor: '#71a768', borderWidth: 1, width: '100%', height: (54/100)*height }}>
+											{ this.renderLoader() }
+										</View>
+									</View>
+								</Content>
+
+								<View style={{ justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', width: '50%', bottom: 10, paddingTop: 10 }}>
+									{ this.renderLocationSetter() }
+								</View>
+							</View>
+						</Modal>
                     </View>
                 </Content>
             </Container>
@@ -110,10 +421,10 @@ class Profile extends Component{
 }
 
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ profile }) => {
     return {
-        auth: auth.user
+		profile: profile.user
     };
 };
 
-export default connect(mapStateToProps)(Profile);
+export default connect(mapStateToProps, { updateProfile })(Profile);

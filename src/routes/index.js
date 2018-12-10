@@ -25,6 +25,12 @@ import VendorDetails from "../components/VendorDetails";
 import FinishedOrder from "../components/FinishedOrder";
 import Profile from "../components/Profile";
 import JoinToVendors from "../components/JoinToVendors";
+import NewOrder from "../components/NewOrder";
+import AcceptOrder from "../components/AcceptOrder";
+import Commission from "../components/Commission";
+import ContactUs from "../components/ContactUs";
+import NewOrders from "../components/NewOrders";
+import FinishOffer from "../components/FinishOffer";
 
 
 const CustomDrawerContentComponent = (props) => (<DrawerCustomization { ...props }/>);
@@ -40,11 +46,16 @@ const drawerNavigation = createDrawerNavigator({
    simCards: SimCards,
    simSize: SimSize,
    currentOrders: CurrentOrders,
+   newOrders: NewOrders,
    chooseOffer: ChooseOffers,
    vendorDetails: VendorDetails,
    finishedOrders: FinishedOrder,
    profile: Profile,
    joinToProvider: JoinToVendors,
+   newOrder: NewOrder,
+   acceptOrder: AcceptOrder,
+   commission: Commission,
+   contactUs: ContactUs,
 
    logout: {
        screen: DrawerTabs,
@@ -65,6 +76,7 @@ const drawerNavigation = createDrawerNavigator({
     });
 
 const AppStack = createStackNavigator({
+
     initScreen: {
         screen: InitScreen,
         navigationOptions: {
@@ -194,6 +206,42 @@ const AppStack = createStackNavigator({
             header: null
         }
     },
+	newOrder: {
+		screen: NewOrder,
+		navigationOptions: {
+			header: null
+		}
+	},
+	acceptOrder: {
+		screen: AcceptOrder,
+		navigationOptions: {
+			header: null
+		}
+	},
+	commission: {
+		screen: Commission,
+		navigationOptions: {
+			header: null
+		}
+	},
+	contactUs: {
+		screen: ContactUs,
+		navigationOptions: {
+			header: null
+		}
+	},
+	newOrders: {
+		screen: NewOrders,
+		navigationOptions: {
+			header: null
+		}
+	},
+	finishOffer: {
+		screen: FinishOffer,
+		navigationOptions: {
+			header: null
+		}
+	},
 }, {
     navigationOptions: {
         headerStyle: { backgroundColor: '#437c1a' },

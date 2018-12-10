@@ -12,7 +12,7 @@ class SimSize extends Component{
         this.state = {
             type: this.props.navigation.state.params.type,
             simData: this.props.navigation.state.params.simData,
-            checked: false,
+            checked: null,
             sizes: [],
             key: ''
         }
@@ -37,12 +37,8 @@ class SimSize extends Component{
     }
 
 
-    setInstallation(){
-        if(this.state.checked){
-            this.setState({ checked: false });
-        }else{
-            this.setState({ checked: true });
-        }
+    setInstallation(id){
+		this.setState({ checked: id });
     }
 
     render(){
@@ -73,13 +69,13 @@ class SimSize extends Component{
                         <List style={{ flex: 1 }}>
                             {
                                 this.state.sizes.map((size, i) => (
-                                    <ListItem key={i} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+                                    <ListItem onPress={() => this.setInstallation(size.id)} key={i} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
                                         <Left style={{ flex: 1 }}>
                                             <Icon type={'FontAwesome'} name={'database'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
                                             <Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>{ size.title }</Text>
                                         </Left>
                                         <Right style={{ flex: 1 }}>
-                                            <CheckBox style={{ borderRadius: 3 }} checked={this.state.checked} onPress={() => this.setInstallation()} color="#437c1a"/>
+                                            <CheckBox style={{ borderRadius: 3, paddingRight: 1 }} checked={this.state.checked === size.id ? true : false} onPress={() => this.setInstallation(size.id)} color="#437c1a"/>
                                         </Right>
                                     </ListItem>
                                 ))
@@ -88,7 +84,7 @@ class SimSize extends Component{
                     </View>
                 </Content>
                 <View style={{ padding: 10 }}>
-                    <Button block style={{marginTop: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', bottom: 20}} onPress={() => this.props.navigation.navigate('problems')} primary>
+                    <Button block style={{marginTop: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', bottom: 20}} onPress={() => this.props.navigation.navigate('determinedLocation', { params: { companyId : this.state.simData.id, type: this.state.type, sizeId: this.state.checked}, accessoryList: [] })} primary>
                         <Text style={{color: '#fff', fontSize: 17, textAlign: 'center'}}>تأكيد</Text>
                     </Button>
                 </View>
