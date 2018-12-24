@@ -25,23 +25,24 @@
     ],
     "ios": {
       "bundleIdentifier": "com.rahat.jwalk",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyAl2Y8u_n_UQQKQq3K5nBUu2vUnqxg64uk"
+      }
     },
     "android": {
       "package": "com.rahat.jwalk",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyBEg8hO6EtdKI7MF7hqwo3PkYqqe0mweZU"
+          "apiKey": "AIzaSyAl2Y8u_n_UQQKQq3K5nBUu2vUnqxg64uk"
         }
       },
       "permissions": [
-        "READ_EXTERNAL_STORAGE"
+        "READ_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "NOTIFICATIONS"
       ]
     }
   }
 }
-
-
-//  Keystore password: 371df55628b84bfba2bf6a8aec30ffe8
-//  Key alias:         QG1fc2hhbXMvcmFoYXQtandhbGs=
-//  Key password:      cfbbaafe948a449ab88ed48f60589df4

@@ -26,6 +26,22 @@
           <option name="port" value="21" />
         </fileTransfer>
       </webServer>
+      <webServer id="dec2797a-4870-4f62-86ca-38eeb424ebc7" name="aait" url="http://aait.sa">
+        <fileTransfer host="aait.sa" port="21" rootFolder="/public_html">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="a6a50784-811a-4502-849a-1d215946dd06" name="shams" url="http://pro3.aait.sa">
+        <fileTransfer host="pro3.aait.sa" port="21" rootFolder="/public_html">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

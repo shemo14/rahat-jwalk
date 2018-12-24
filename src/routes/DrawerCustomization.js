@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import {Image, View, Text, TouchableOpacity, ImageBackground, AsyncStorage } from 'react-native';
+import {Image, View, Text, TouchableOpacity, ImageBackground, AsyncStorage, Linking } from 'react-native';
 import {Container, Footer, Content, Body } from 'native-base';
 import { DrawerItems } from 'react-navigation';
 import {connect} from "react-redux";
+import axios from 'axios';
+import CONST from "../consts";
+
 
 
 
@@ -11,22 +14,33 @@ class DrawerCustomization extends Component {
         super(props);
         this.state={
             user: [],
-            lang: 'en'
+            lang: 'en',
+			site_social: []
         }
 
         console.log('this fuck cons');
     }
 
 	async logout(){
+		axios.post( CONST.url + 'logout', { user_id: this.props.user.id })
+			.catch(error => console.warn(error.data));
+
 		this.props.navigation.navigate('login');
-        AsyncStorage.clear();
+		AsyncStorage.clear();
     }
 
 
+    componentWillMount() {
+        axios.get(CONST.url + 'contact_info').then(response => {
+            this.setState({ site_social: response.data.data.site_social })
+        })
+	}
+
 
 	render(){
-        const { user } = this.props;
-        // console.log(user);
+        let { user } = this.props;
+        if (user === null)
+            user = this.props.auth.data;
 
         return(
             <Container style={{ overflow: 'visible' }}>
@@ -52,23 +66,24 @@ class DrawerCustomization extends Component {
                                 }
                             }
                         }
-						items={this.props.auth !== null && this.props.user.provider === "1" ? this.props.items.filter((item) => item.routeName !== 'joinToProvider') : this.props.items.filter((item) => item.routeName !== 'newOrders' && item.routeName !== 'commission')  }
+						items={this.props.auth !== null && user.provider == 1 ? this.props.items.filter((item) => item.routeName !== 'joinToProvider') : this.props.items.filter((item) => item.routeName !== 'newOrders' && item.routeName !== 'commission')  }
                     />
                     <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center', flex: 1 }}>
-                        <TouchableOpacity style={{ padding: 3 }}>
-                            <Image style={{ width: 30, height: 30 }} source={require('../../assets/images/email.png')}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ padding: 3 }}>
-                            <Image style={{ width: 30, height: 30 }} source={require('../../assets/images/smartphone.png')}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ padding: 3 }}>
-                            <Image style={{ width: 30, height: 30 }} source={require('../../assets/images/twitter.png')}/>
-                        </TouchableOpacity>
+                        {
+                            this.state.site_social.map((social, i) => {
+                                return (
+									<TouchableOpacity key={i} style={{ padding: 3 }} onPress={() => { Linking.openURL(social.link) }}>
+										<Image style={{ width: 30, height: 30 }} source={{ uri: social.logo }}/>
+									</TouchableOpacity>
+                                )
+                            })
+                        }
+
                     </View>
                 </Content>
-                    <TouchableOpacity style={{ position: 'absolute', left: 250, top: '45%' }}>
-                        <Image style={{ width: 50, height: 50 }} source={require('../../assets/images/button.png')} />
-                    </TouchableOpacity>
+                    {/*<TouchableOpacity style={{ position: 'absolute', left: 250, top: '45%' }}>*/}
+                        {/*<Image style={{ width: 50, height: 50 }} source={require('../../assets/images/button.png')} />*/}
+                    {/*</TouchableOpacity>*/}
                 <Footer style={{ backgroundColor: '#fff' }}>
                     <ImageBackground resizeMode={'cover'} style={{ width: '100%', height: 140, bottom: -6, position: 'absolute' }} source={require('../../assets/images/Vector_Smart_Object2.png')}/>
                 </Footer>

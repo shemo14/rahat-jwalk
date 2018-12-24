@@ -55,7 +55,7 @@ class ProblemDesc extends Component{
                     <Text style={{ color: '#fff', textAlign: 'center', marginRight: 20, fontSize: 18 }}>اوصف المشكلة</Text>
                     </Body>
                     <Left style={{ flex: 0 }}>
-                        <Button transparent onPress={() => this.props.navigation.goBack()}>
+                        <Button transparent onPress={() => this.props.navigation.navigate('problems')}>
                             <Icon name={'ios-arrow-back'} type='Ionicons' style={{ color: '#fff' }} />
                         </Button>
                     </Left>

@@ -35,10 +35,10 @@ class Profile extends Component{
 			initMap: true,
 			showToast: false,
             base64: null,
-			mob_maintenance: 0,
-			mob_seller: 0,
-			accessories_seller: 0,
-			sim_card: 0,
+			mob_maintenance: this.props.profile.mob_maintenance,
+			mob_seller: this.props.profile.mob_seller,
+			accessories_seller: this.props.profile.accessories_seller,
+			sim_card: this.props.profile.sim_card,
 			lat: this.props.profile.lat,
 			lng: this.props.profile.lng,
         }
@@ -49,7 +49,7 @@ class Profile extends Component{
     });
 
     renderProviderServices(){
-        if (this.props.profile.provider === "1"){
+        if (this.props.profile.provider == 1){
             return (
 				<View>
 					<View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
@@ -58,43 +58,43 @@ class Profile extends Component{
 					</View>
 
 					<List>
-						<ListItem onPress={() => this.state.mob_maintenance === 1 ? this.setState({ mob_maintenance: 0 }) : this.setState({ mob_maintenance: 1 })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+						<ListItem onPress={() => this.state.mob_maintenance ? this.setState({ mob_maintenance: false }) : this.setState({ mob_maintenance: true })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
 								<Icon type={'Ionicons'} name={'ios-settings'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
 								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>صيانة</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_maintenance === 1 ? true : false} onPress={() => this.state.mob_maintenance === 1 ? this.setState({ mob_maintenance: 0 }) : this.setState({ mob_maintenance: 1 })} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_maintenance} onPress={() => this.state.mob_maintenance ? this.setState({ mob_maintenance: false }) : this.setState({ mob_maintenance: true })} color="#437c1a"/>
 							</Right>
 						</ListItem>
 
-						<ListItem onPress={() => this.state.mob_seller === 1 ? this.setState({ mob_seller: 0 }) : this.setState({ mob_seller: 1 })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+						<ListItem onPress={() => this.state.mob_seller ? this.setState({ mob_seller: false }) : this.setState({ mob_seller: true })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
 								<Icon type={'Entypo'} name={'mobile'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
 								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>بيع جولات</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_seller === 1 ? true : false} onPress={() => this.state.mob_seller === 1 ? this.setState({ mob_seller: 0 }) : this.setState({ mob_seller: 1 })} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_seller } onPress={() => this.state.mob_seller ? this.setState({ mob_seller: false }) : this.setState({ mob_seller: true })} color="#437c1a"/>
 							</Right>
 						</ListItem>
 
-						<ListItem onPress={() => this.state.accessories_seller === 1 ? this.setState({ accessories_seller: 0 }) : this.setState({ accessories_seller: 1 })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+						<ListItem onPress={() => this.state.accessories_seller ? this.setState({ accessories_seller: false }) : this.setState({ accessories_seller: true })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
 								<Icon type={'MaterialCommunityIcons'} name={'cellphone-screenshot'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
 								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>بيع اكسسوارات</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.accessories_seller === 1 ? true : false} onPress={() => this.state.accessories_seller === 1 ? this.setState({ accessories_seller: 0 }) : this.setState({ accessories_seller: 1 })} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.accessories_seller} onPress={() => this.state.accessories_seller ? this.setState({ accessories_seller: false }) : this.setState({ accessories_seller: true })} color="#437c1a"/>
 							</Right>
 						</ListItem>
 
-						<ListItem onPress={() => this.state.sim_card === 1 ? this.setState({ sim_card: 0 }) : this.setState({ sim_card: 1 }) } noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+						<ListItem onPress={() => this.state.sim_card ? this.setState({ sim_card: false }) : this.setState({ sim_card: true }) } noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
 								<Icon type={'MaterialIcons'} name={'sim-card'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
 								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>شرائح بيانات</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.sim_card === 1 ? true : false} onPress={() => this.setInstallation()} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.sim_card} onPress={() => this.state.sim_card ? this.setState({ sim_card: false}) : this.setState({ sim_card: true }) } color="#437c1a"/>
 							</Right>
 						</ListItem>
 					</List>
@@ -300,7 +300,7 @@ class Profile extends Component{
 			lng: this.state.lng,
 			image: this.state.base64,
 			email: this.state.email === this.props.profile.email ? null : this.state.email,
-			device_id: Expo.Constants.deviceId,
+			device_id: null,
 			mob_maintenance: this.state.mob_maintenance,
 			mob_seller: this.state.mob_seller,
 			accessories_seller: this.state.accessories_seller,
@@ -319,6 +319,8 @@ class Profile extends Component{
     render(){
         const data = this.props.profile;
 		let { userImage } = this.state;
+
+		console.log(data);
 
         return(
             <Container>
@@ -369,12 +371,12 @@ class Profile extends Component{
 
                                 <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                                     <Text style={{ flex: 2 }}>كلمة المرور :</Text>
-                                    <Input onChangeText={(password) => this.setState({password})} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
+                                    <Input secureTextEntry onChangeText={(password) => this.setState({password})} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
                                 </View>
 
                                 <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                                     <Text style={{ flex: 2 }}>تأكيد كلمة المرور :</Text>
-                                    <Input onChangeText={(confirmPassword) => this.setState({confirmPassword})} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
+                                    <Input secureTextEntry onChangeText={(confirmPassword) => this.setState({confirmPassword})} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
                                 </View>
                             </Form>
 

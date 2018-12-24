@@ -36,8 +36,10 @@ class VendorDetails extends Component{
     onAcceptProvider(){
         axios.post(CONST.url + 'choose/provider', {
             order_id: this.state.orderId,
-            offer_id: this.state.setRateValue,
-        }).then(response => console.log(response.data))
+            offer_id: this.state.vendorData.id,
+        }).then(response => {
+            this.props.navigation.navigate('acceptOffer');
+        })
     }
 
     render(){
@@ -53,7 +55,7 @@ class VendorDetails extends Component{
                     <Text style={{ color: '#fff', textAlign: 'center', marginRight: 20, fontSize: 18 }}>تفاصيل الفني</Text>
                     </Body>
                     <Left style={{ flex: 0 }}>
-                        <Button transparent onPress={() => this.props.navigation.goBack()}>
+                        <Button transparent onPress={() => this.props.navigation.navigate('chooseOffer')}>
                             <Icon name={'ios-arrow-back'} type='Ionicons' style={{ color: '#fff' }} />
                         </Button>
                     </Left>
@@ -116,9 +118,9 @@ class VendorDetails extends Component{
                                 </Body>
                             </Header>
                             <View style={{ alignItems: 'center' }}>
-                                <Image source={{ uri: 'http://editorphotoshop.com/wp-content/uploads/2016/07/Model-Man.jpg' }} style={{ height: 90, width: 90, borderRadius: 80, borderWidth: 1, borderColor: '#f4f4f4', marginTop: 10 }}/>
+                                <Image source={{ uri: this.state.vendorData.provider_image }} style={{ height: 90, width: 90, borderRadius: 80, borderWidth: 1, borderColor: '#f4f4f4', marginTop: 10 }}/>
                                 <View style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#f6f6f6', borderRadius: 5, height: 40, width: 200, alignItems: 'center', justifyContent: 'center', marginTop: 5, marginBottom: 10 }}>
-                                    <Text style={{ color: '#989899', fontSize: 20 }}>اوامر الشبكة</Text>
+                                    <Text style={{ color: '#989899', fontSize: 20 }}>{ this.state.vendorData.provider_name }</Text>
                                 </View>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 5, marginBottom: 10 }}>
                                     <Icon onPress={() => this.setState({ setRateValue: 1 })} type={'FontAwesome'} name={'star'} style={{ color: this.state.setRateValue >= 1 ? '#eebc47' : '#6a6a6a', fontSize: 30 }}/>

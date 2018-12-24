@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Permissions } from 'expo'
-import {AsyncStorage} from "react-native";
+import {AsyncStorage, BackHandler} from "react-native";
 
 
 class InitScreen extends Component{
@@ -9,10 +9,10 @@ class InitScreen extends Component{
         super(props);
     }
 
+
     componentWillMount = async () => {
         // AsyncStorage.clear();
-        console.log(this.props.profile);
-        if (this.props.auth !== null && this.props.auth.key !== '0')
+        if (this.props.user !== null && this.props.auth.key !== '0')
             this.props.navigation.navigate('drawerNavigation');
         else
             this.props.navigation.navigate('login');
@@ -22,7 +22,7 @@ class InitScreen extends Component{
     };
 
     render(){
-        return false
+        return false;
     }
 }
 
@@ -33,7 +33,7 @@ const mapStateToProps = ({ auth, profile }) => {
         message: auth.message,
         loading: auth.loading,
         auth: auth.user,
-        user: profile
+        user: profile.user
     };
 };
 export default connect(mapStateToProps)(InitScreen);

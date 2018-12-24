@@ -31,6 +31,11 @@ import Commission from "../components/Commission";
 import ContactUs from "../components/ContactUs";
 import NewOrders from "../components/NewOrders";
 import FinishOffer from "../components/FinishOffer";
+import RenderMapView from "../components/RenderMapView";
+import ForgetPassword from "../components/ForgetPassword";
+import AcceptOffer from "../components/AcceptOffer";
+import FinishOrder from "../components/FinishOrder";
+import DeleteOrder from "../components/DeleteOrder";
 
 
 const CustomDrawerContentComponent = (props) => (<DrawerCustomization { ...props }/>);
@@ -76,8 +81,7 @@ const drawerNavigation = createDrawerNavigator({
     });
 
 const AppStack = createStackNavigator({
-
-    initScreen: {
+	initScreen: {
         screen: InitScreen,
         navigationOptions: {
             header: null
@@ -242,9 +246,41 @@ const AppStack = createStackNavigator({
 			header: null
 		}
 	},
+	renderMapView: {
+		screen: RenderMapView,
+		navigationOptions: {
+			header: null
+		}
+	},
+	forgetPassword: {
+		screen: ForgetPassword,
+		navigationOptions: {
+			header: null
+		}
+	},
+	acceptOffer: {
+		screen: AcceptOffer,
+		navigationOptions: {
+			header: null
+		}
+	},
+	finishOrder: {
+		screen: FinishOrder,
+		navigationOptions: {
+			header: null
+		}
+	},
+	deleteOrder: {
+		screen: DeleteOrder,
+		navigationOptions: {
+			header: null
+		}
+	},
 }, {
     navigationOptions: {
         headerStyle: { backgroundColor: '#437c1a' },
+		backBehavior: 'none',
+		header: null
     }
 });
 

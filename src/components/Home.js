@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Animated, TouchableOpacity } from 'react-native';
+import {View, Text, Image, Animated, TouchableOpacity, BackHandler} from 'react-native';
 import { Button, Icon, Container, Header, Right, Body, ListItem, List, Left } from 'native-base';
-import { MapView, Location } from 'expo';
+import { MapView, Location, Permissions, Notifications } from 'expo'
 import { DoubleBounce } from 'react-native-loader';
 import CONST from "../consts";
 import axios from "axios/index";
@@ -17,7 +17,8 @@ class Home extends Component{
             availabel: 0,
             userLocation: [],
             initMap: true,
-            binsLocations: []
+            binsLocations: [],
+			routeName: this.props.navigation.state.routeName
         }
     }
 
@@ -26,7 +27,12 @@ class Home extends Component{
         drawerIcon: ( <Icon style={{ fontSize: 20, color: '#437c1a' }} type={'FontAwesome'} name={'home'}/> )
     });
 
-    renderLoader(){
+    // componentWillMount() {
+    //     Notifications.addListener(this.handleNotification )
+	// }
+
+
+	renderLoader(){
         if (this.state.initMap || this.state.binsLocations === []){
             return (
                 <View style={{ alignItems: 'center', justifyContent: 'center', height: 500 }}>
@@ -79,16 +85,81 @@ class Home extends Component{
         }
     }
 
+	componentWillMount = async () => {
+		let { status } = await Permissions.askAsync(Permissions.LOCATION);
+		if (status !== 'granted') {
+			alert('صلاحيات تحديد موقعك الحالي ملغاه');
+		}else {
+			const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({});
+			const userLocation = { latitude, longitude };
+			this.setState({  initMap: false, userLocation });
+		}
+
+		const { status: existingStatus } = await Permissions.getAsync(
+			Permissions.NOTIFICATIONS
+		);
+		let finalStatus = existingStatus;
+
+		if (existingStatus !== 'granted') {
+			const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+			finalStatus = status;
+		}
+
+		if (finalStatus !== 'granted') {
+			return;
+		}
+
+		let token = await Notifications.getExpoPushTokenAsync();
+		this.setState({ token })
+
+		axios.post(CONST.url + 'show/map/data', { user_id: this.props.auth.data.id, lat: this.state.userLocation.latitude, lng: this.state.userLocation.longitude }).then(response => {
+			this.setState({ binsLocations: response.data.data.other_data });
+		});
 
 
-    async componentDidMount(){
-        const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({});
-        const userLocation = { latitude, longitude };
-        this.setState({  initMap: false, userLocation });
+		console.log(this.props.user, this.props.auth)
+	}
 
-        axios.post(CONST.url + 'show/map/data', { user_id: this.props.auth.data.id, lat: this.state.userLocation.latitude, lng: this.state.userLocation.longitude }).then(response => {
-            this.setState({ binsLocations: response.data.data.other_data });
-        });
+
+
+    componentDidMount(){
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+
+		Notifications.addListener(this.handleNotification);
+    }
+
+	handleNotification = (notification) => {
+		console.log(notification);
+
+		if (notification && notification.origin !== 'received') {
+			const { data } = notification;
+			const orderId = data.id;
+
+			if (data.type && data.type === 'order') {
+				this.props.navigation.navigate('newOrder', { orderId });
+			}else if(data.type && data.type === 'offer'){
+				console.log('this is order id', orderId);
+				this.props.navigation.navigate('finishOrder', { orderId });
+			}
+		}
+	}
+
+
+	componentWillUnmount() {
+		BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+	}
+
+
+	handleBackPress = () => {
+		if (this.state.routeName === 'home'){
+			BackHandler.exitApp();
+			return true
+		}else
+			this.goBack();
+    };
+
+	goBack(){
+		this.props.navigation.goBack();
     }
 
     render(){
@@ -151,9 +222,10 @@ class Home extends Component{
 
 }
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, profile }) => {
     return {
-        auth: auth.user
+        auth: auth.user,
+		user: profile.user
     };
 };
 

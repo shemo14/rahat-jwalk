@@ -8,10 +8,11 @@ import reducers from '../reducers';
 const persistsConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whiltelist: ['auth', 'logout']
+    whiltelist: ['auth', 'logout', 'profile']
 };
 
 const persistedReducer = persistReducer(persistsConfig, reducers);
 
 export const store = createStore(persistedReducer, {}, applyMiddleware(thunk));
 export const persistedStore = persistStore(store);
+

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Image, Animated, ScrollView } from 'react-native';
 import { Button, Icon, Container, Header, Right, Body, Content, Left, Input, List, ListItem } from 'native-base';
-import { MapView, Location } from 'expo'
+import {MapView, Location, Permissions} from 'expo'
 import { DoubleBounce } from 'react-native-loader'
 import axios from 'axios';
 import CONST from "../consts";
@@ -23,7 +23,8 @@ class DeterminedLocation extends Component{
             selectedLocation: null,
             userLocation: [],
             initMap: true,
-            loader: false
+            loader: false,
+            city: ''
         }
     }
 
@@ -31,8 +32,46 @@ class DeterminedLocation extends Component{
         drawerLabel: ()=> null,
     });
 
+    async componentWillMount() {
 
-    async componentDidMount(){
+		axios.post(CONST.url + 'condition').then(response => {
+			this.setState({ roles: response.data.data })
+		})
+
+		let { status } = await Permissions.askAsync(Permissions.LOCATION);
+		if (status !== 'granted') {
+			alert('صلاحيات تحديد موقعك الحالي ملغاه');
+		}else {
+			const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({});
+			const userLocation = { latitude, longitude };
+			this.setState({  initMap: false, userLocation });
+
+		}
+
+		let getCity = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=';
+		getCity += this.state.userLocation.latitude + ',' + this.state.userLocation.longitude;
+		getCity += '&key=AIzaSyBPftOQyR7e_2mv9MRu-TeNoW2qaOEK0fw&language=ar&sensor=true';
+
+
+		try {
+			const { data } = await axios.get(getCity);
+			this.setState({ city: data.results[0].formatted_address });
+
+		} catch (e) {
+			console.log(e);
+		}
+
+		const formattedItem = {
+			name: this.state.city,
+			address: this.state.city,
+			latitude: this.state.userLocation.latitude,
+			longitude: this.state.userLocation.longitude
+		};
+
+		this.setState({ selectedLocation: formattedItem });
+	}
+
+	async componentDidMount(){
         const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({});
         const userLocation = { latitude, longitude };
         this.setState({  initMap: false, userLocation });
@@ -136,8 +175,10 @@ class DeterminedLocation extends Component{
                 }
             ).then(response => {
                 this.setState({ loader: false });
-                this.props.navigation.navigate('confirmOrder');
+                // this.props.navigation.navigate('confirmOrder');
             }).catch(() => this.setState({ loader: false }))
+
+		this.props.navigation.navigate('confirmOrder');
     }
 
     renderLoader(){
@@ -186,6 +227,17 @@ class DeterminedLocation extends Component{
     }
 
     render(){
+        console.log(this.state.params.type);
+        let navigate = '';
+        if (this.state.params.type === 1)
+            navigate = 'problemDesc';
+        else if(this.state.params.type === 2)
+            navigate = 'colors';
+		else if(this.state.params.type === 3)
+		    navigate = 'accessory';
+		else if(this.state.params.type === 4)
+		    navigate = 'simSize'
+
         return(
             <Container>
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
@@ -198,7 +250,7 @@ class DeterminedLocation extends Component{
                     <Text style={{ color: '#fff', textAlign: 'center', marginRight: 20, fontSize: 18 }}>تحديد الموقع</Text>
                     </Body>
                     <Left style={{ flex: 0 }}>
-                        <Button transparent onPress={() => this.props.navigation.goBack()}>
+                        <Button transparent onPress={() => this.props.navigation.navigate(navigate)}>
                             <Icon name={'ios-arrow-back'} type='Ionicons' style={{ color: '#fff' }} />
                         </Button>
                     </Left>
@@ -209,7 +261,7 @@ class DeterminedLocation extends Component{
                             <Text style={{ color: '#747474', marginTop: 5, fontSize: 17 }}>موقعك : </Text>
                             <View style={{ flexDirection: 'row', backgroundColor: '#f4f4f4', borderWidth: 1, height: 35,borderColor: '#ededed', borderRadius: 5, width: '100%' }}>
                                 <Icon style={{ color: '#4a862f', fontSize: 22, marginRight: 5, marginTop: 5 }} type={'Entypo'} name={'location-pin'}/>
-                                <Input onChangeText={(query) => this.setState({ query })} onSubmitEditing={() => this.search()} style={{ width: '100%', paddingBottom: 20 }} placeholderStyle={{ color: '#d4d4d4' }} placeholder='حدد موقعك'/>
+                                <Input value={this.state.city} onChangeText={(query) => this.setState({ query })} onSubmitEditing={() => this.search()} style={{ width: '100%', paddingBottom: 20 }} placeholderStyle={{ color: '#d4d4d4' }} placeholder='حدد موقعك'/>
                             </View>
                             { this.toggleSearchResult() }
 

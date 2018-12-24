@@ -4,6 +4,7 @@ import { Button, Icon, Container, Header, Right, Body, Content, Left } from 'nat
 import CONST from "../consts";
 import axios from "axios/index";
 import { DoubleBounce } from 'react-native-loader';
+import { NavigationActions } from 'react-navigation';
 
 
 const width = Dimensions.get('window').width;
@@ -63,7 +64,7 @@ class Models extends Component{
                     <Text style={{ color: '#fff', textAlign: 'center', marginRight: 20, fontSize: 18 }}>موديل الجوال</Text>
                     </Body>
                     <Left style={{ flex: 0 }}>
-                        <Button transparent onPress={() => this.props.navigation.goBack()}>
+                        <Button transparent onPress={() => this.props.navigation.navigate('brands')}>
                             <Icon name={'ios-arrow-back'} type='Ionicons' style={{ color: '#fff' }} />
                         </Button>
                     </Left>
@@ -83,7 +84,6 @@ class Models extends Component{
         )
     }
 }
-
 
 const styles={
     brandContainer: {

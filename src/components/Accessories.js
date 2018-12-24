@@ -58,6 +58,22 @@ class Accessories extends Component{
         }
     }
 
+    renderButton(){
+    	if (this.state.checkedAccessory.length > 0){
+    		return(
+				<Button block style={{marginTop: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', bottom: 20}} onPress={() => this.onPressConfirm()}>
+					<Text style={{color: '#fff', fontSize: 17, textAlign: 'center'}}>تأكيد</Text>
+				</Button>
+			);
+		}
+
+    	return (
+			<Button block disabled style={{marginTop: 20, width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', bottom: 20}} light>
+				<Text style={{color: '#999', fontSize: 17, textAlign: 'center' }}>تأكيد</Text>
+			</Button>
+		);
+	}
+
     render(){
         return(
             <Container>
@@ -71,7 +87,7 @@ class Accessories extends Component{
                     <Text style={{ color: '#fff', textAlign: 'center', marginRight: 20, fontSize: 18 }}>اكسسوارات الجوال</Text>
                     </Body>
                     <Left style={{ flex: 0 }}>
-                        <Button transparent onPress={() => this.props.navigation.goBack()}>
+                        <Button transparent onPress={() => this.props.navigation.navigate('colors')}>
                             <Icon name={'ios-arrow-back'} type='Ionicons' style={{ color: '#fff' }} />
                         </Button>
                     </Left>
@@ -85,9 +101,7 @@ class Accessories extends Component{
                     </View>
                 </Content>
                 <View style={{ padding: 10 }}>
-                    <Button block style={{marginTop: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', bottom: 20}} onPress={() => this.onPressConfirm()}>
-                        <Text style={{color: '#fff', fontSize: 17, textAlign: 'center'}}>تأكيد</Text>
-                    </Button>
+					{ this.renderButton() }
                 </View>
             </Container>
         )

@@ -73,13 +73,36 @@ class FinishedOrder extends Component{
         )
     }
 
+	deleteOrder(id){
+		axios.post( CONST.url + 'delete/order',
+			{
+				order_id: id
+			}).then(response => {
+			if(response.data.key === '0'){
+				Toast.show({
+					text: response.data.massage,
+					type: "danger",
+					duration: 3000
+				});
+			}else{
+				this.setState({ loader: false });
+				this.props.navigation.navigate('deleteOrder')
+			}
+		})
+
+        this.componentWillMount()
+	}
+
 
     renderListItems(){
         return this.state.orders.map((order, i) => (
             <ListItem key={i} style={{ backgroundColor: '#f4f3f3', marginLeft: 0, borderRadius: 15, borderLeftWidth: 5, borderColor: '#4a8c4c', paddingLeft: 10, marginBottom: 10 }}>
                 <Body>
-                <View style={{ borderBottomWidth: 1, borderBottomColor: '#f7f7f7', marginBottom: 3 }}>
-                    <Text style={{ color: '#949494', fontSize: 18, textAlign: 'left' }}>{ order.model }</Text>
+                <View style={{ borderBottomWidth: 1, borderBottomColor: '#f7f7f7', marginBottom: 3, flexDirection: 'row' }}>
+                    <Text style={{ color: '#949494', fontSize: 18, textAlign: 'left', flex: 3 }}>{ order.model }</Text>
+                    <TouchableOpacity onPress={() => this.deleteOrder(order.id)}>
+						<Icon name={'trash-o'} type={'FontAwesome'} style={{ fontSize: 20, top: 3, color: '#44813a' }}/>
+                    </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 3 }}>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Dimensions, TouchableOpacity } from 'react-native';
-import { Button, Icon, Container, Header, Right, Body, Content, Left, List, ListItem, Radio } from 'native-base';
+import {Button, Icon, Container, Header, Right, Body, Content, Left, List, ListItem, Radio, Toast} from 'native-base';
 import CONST from "../consts";
 import axios from "axios/index";
 import { DoubleBounce } from 'react-native-loader';
@@ -33,7 +33,6 @@ class ChooseOffers extends Component{
             () => {
                 const timer = (this.state.hours * 60 * 60) + (this.state.minutes * 60) + this.state.seconds;
                 const fill  = 100 - (timer/(this.state.totalMinutes * 60))*100;
-                console.log(timer, fill, this.state.seconds, this.state.minutes, (this.state.totalMinutes * 60));
                 this.setState((prevState)=> ({ seconds: prevState.seconds - 1, fill: fill }));
                 if (this.state.seconds === 0 && this.state.minutes > 0){
                     this.setState((prevState)=> ({ minutes: prevState.minutes - 1, seconds: 60 }));
@@ -136,6 +135,24 @@ class ChooseOffers extends Component{
         this.componentWillMount()
     }
 
+	deleteOrder(){
+		axios.post( CONST.url + 'delete/order',
+			{
+				order_id: this.state.orderId
+			}).then(response => {
+			if(response.data.key === '0'){
+				Toast.show({
+					text: response.data.massage,
+					type: "danger",
+					duration: 3000
+				});
+			}else{
+				this.setState({ loader: false });
+				this.props.navigation.navigate('deleteOrder')
+			}
+		})
+    }
+
     render(){
         return(
             <Container>
@@ -149,7 +166,7 @@ class ChooseOffers extends Component{
                     <Text style={{ color: '#fff', textAlign: 'center', marginRight: 20, fontSize: 18 }}>اختر العرض</Text>
                     </Body>
                     <Left style={{ flex: 0 }}>
-                        <Button transparent onPress={() => this.props.navigation.goBack()}>
+                        <Button transparent onPress={() => this.props.navigation.navigate('currentOrders')}>
                             <Icon name={'ios-arrow-back'} type='Ionicons' style={{ color: '#fff' }} />
                         </Button>
                     </Left>
@@ -195,6 +212,10 @@ class ChooseOffers extends Component{
                         <List>
                             { this.renderListItems() }
                         </List>
+
+						<Button block style={{marginTop: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', marginBottom: 10}} onPress={() => this.deleteOrder()  } primary>
+							<Text style={{color: '#fff', fontSize: 17, textAlign: 'center'}}>الغاء الطلب</Text>
+						</Button>
                     </View>
                 </Content>
             </Container>

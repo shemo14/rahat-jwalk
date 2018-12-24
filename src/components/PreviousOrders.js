@@ -18,7 +18,6 @@ class PreviousOrders extends Component{
             price: false,
             time: false,
             rate: false,
-            orderId: this.props.navigation.state.params.orderId,
         }
     }
 

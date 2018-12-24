@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, KeyboardAvoidingView, Image, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Image, TouchableOpacity, ImageBackground, BackHandler } from 'react-native';
 import { Container, Button, Content, Form, Item, Input, Icon, Toast } from 'native-base';
 import { Spinner } from '../common'
 import { connect } from 'react-redux';
 import { userLogin, profile } from '../actions'
+import { Permissions, Notifications } from 'expo';
+
 
 
 class Login extends Component{
@@ -13,30 +15,81 @@ class Login extends Component{
           phone: '',
           password: '',
           passwordError: '',
+          token: '',
           phoneError: '',
           showToast: false,
+          userId: null
         };
     }
 
+
     onLoginPressed() {
+		console.log(this.state.userId);
+
+		// alert(this.state.token);
 
         const err = this.validate();
         if (!err){
             this.setState({ loader: true });
-            const {phone, password} = this.state;
-            this.props.userLogin({ phone, password });
+            const {phone, password, token} = this.state;
+            this.props.userLogin({ phone, password, token });
         }
 
     }
 
-    componentWillReceiveProps(newProps){
 
+    componentDidMount() {
+		BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+	}
+
+	handleBackPress = () => {
+		if (this.state.routeName === 'home'){
+			BackHandler.exitApp();
+			return true
+		}else
+			this.goBack();
+	};
+
+	goBack(){
+		this.props.navigation.goBack();
+	}
+
+
+	async componentWillMount() {
+
+		const { status: existingStatus } = await Permissions.getAsync(
+			Permissions.NOTIFICATIONS
+		);
+		let finalStatus = existingStatus;
+
+		if (existingStatus !== 'granted') {
+			const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+			finalStatus = status;
+		}
+
+		if (finalStatus !== 'granted') {
+			return;
+		}
+
+		let token = await Notifications.getExpoPushTokenAsync();
+		this.setState({ token, userId: null })
+		alert(token);
+
+	}
+
+	componentWillReceiveProps(newProps){
         if (newProps.auth !== null && newProps.auth.key === "1"){
-			this.props.profile(newProps.auth.data.id);
-            this.props.navigation.navigate('drawerNavigation');
+
+
+            if (this.state.userId === null){
+				this.setState({ userId: newProps.auth.data.id });
+				this.props.profile(newProps.auth.data.id);
+            }
+
+			this.props.navigation.navigate('drawerNavigation');
         }
         
-        if (newProps.auth !== null) {
+        if (this.props.profile !== null) {
 			Toast.show({
 				text: newProps.auth.massage,
 				type: newProps.auth.key === "1" ? "success" : "danger",
@@ -80,7 +133,7 @@ class Login extends Component{
         }
 
         return (
-            <Button block style={{marginTop: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} onPress={() => { this.onLoginPressed()  }} primary>
+            <Button block style={{ position: 'absolute', backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} onPress={() => { this.onLoginPressed()  }} primary>
                 <Text style={{color: '#fff', fontSize: 17, textAlign: 'center'}}>دخول</Text>
             </Button>
         );
@@ -128,16 +181,20 @@ class Login extends Component{
                                     marginTop: 2
                                 }}>{this.state.passwordError}</Text>
                                 <View style={{justifyContent: 'center', alignItems: 'center', margin: 20}}>
-                                    <Text style={{ color: '#8c8c8c', marginBottom: 10, textDecorationLine: "underline" }}>هل نسيت كلمة المرور ؟</Text>
+                                    <Text onPress={() => this.props.navigation.navigate('forgetPassword')} style={{ color: '#8c8c8c', marginBottom: 10, textDecorationLine: "underline" }}>هل نسيت كلمة المرور ؟</Text>
                                     <TouchableOpacity onPress={() => this.props.navigation.navigate('signUp')}>
                                         <Text style={{ color: '#8c8c8c', textDecorationLine: "underline" }}> لا تمتلك حساب ؟</Text>
                                     </TouchableOpacity>
                                 </View>
-                                {this.renderLoading()}
+
                             </View>
                         </Form>
                     </KeyboardAvoidingView>
-                    <Image resizeMode={'cover'} style={{ width: '100%', height: 140, bottom: -6, position: 'absolute' }} source={require('../../assets/images/Vector_Smart_Object.png')}/>
+                    <ImageBackground resizeMode={'center'} style={{ width: '100%', height: 140, bottom: -6, position: 'absolute' }} source={require('../../assets/images/Vector_Smart_Object.png')}>
+						<View style={{ top: -50, padding: 30 }}>
+							{this.renderLoading()}
+                        </View>
+                    </ImageBackground>
                 </Content>
             </Container>
         )
@@ -146,10 +203,11 @@ class Login extends Component{
 
 
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, profile }) => {
     return {
         loading: auth.loading,
         auth: auth.user,
+        user: profile.user
     };
 };
 export default connect(mapStateToProps, { userLogin, profile })(Login);

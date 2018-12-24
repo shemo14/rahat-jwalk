@@ -25,10 +25,10 @@ class JoinToVendors extends Component{
             loader: false,
             userImage: null,
             phone: this.props.auth.phone,
-			mob_maintenance: 0,
-			mob_seller: 0,
-			accessories_seller: 0,
-			sim_card: 0,
+			mob_maintenance: false,
+			mob_seller: false,
+			accessories_seller: false,
+			sim_card: false,
         }
     }
 
@@ -46,43 +46,43 @@ class JoinToVendors extends Component{
 					</View>
 
 					<List>
-						<ListItem onPress={() => this.state.mob_maintenance === 1 ? this.setState({ mob_maintenance: 0 }) : this.setState({ mob_maintenance: 1 })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+						<ListItem onPress={() => this.state.mob_maintenance ? this.setState({ mob_maintenance: false }) : this.setState({ mob_maintenance: true })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
 								<Icon type={'Ionicons'} name={'ios-settings'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
 								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>صيانة</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_maintenance === 1 ? true : false} onPress={() => this.state.mob_maintenance === 1 ? this.setState({ mob_maintenance: 0 }) : this.setState({ mob_maintenance: 1 })} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_maintenance} onPress={() => this.state.mob_maintenance ? this.setState({ mob_maintenance: false }) : this.setState({ mob_maintenance: true })} color="#437c1a"/>
 							</Right>
 						</ListItem>
 
-						<ListItem onPress={() => this.state.mob_seller === 1 ? this.setState({ mob_seller: 0 }) : this.setState({ mob_seller: 1 })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+						<ListItem onPress={() => this.state.mob_seller ? this.setState({ mob_seller: false }) : this.setState({ mob_seller: true })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
 								<Icon type={'Entypo'} name={'mobile'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
 								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>بيع جولات</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_seller === 1 ? true : false} onPress={() => this.state.mob_seller === 1 ? this.setState({ mob_seller: 0 }) : this.setState({ mob_seller: 1 })} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_seller} onPress={() => this.state.mob_seller ? this.setState({ mob_seller: false }) : this.setState({ mob_seller: true })} color="#437c1a"/>
 							</Right>
 						</ListItem>
 
-						<ListItem onPress={() => this.state.accessories_seller === 1 ? this.setState({ accessories_seller: 0 }) : this.setState({ accessories_seller: 1 })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+						<ListItem onPress={() => this.state.accessories_seller ? this.setState({ accessories_seller: false }) : this.setState({ accessories_seller: true })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
 								<Icon type={'MaterialCommunityIcons'} name={'cellphone-screenshot'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
 								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>بيع اكسسوارات</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.accessories_seller === 1 ? true : false} onPress={() => this.state.accessories_seller === 1 ? this.setState({ accessories_seller: 0 }) : this.setState({ accessories_seller: 1 })} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.accessories_seller} onPress={() => this.state.accessories_seller ? this.setState({ accessories_seller: false}) : this.setState({ accessories_seller: true })} color="#437c1a"/>
 							</Right>
 						</ListItem>
 
-						<ListItem onPress={() => this.state.sim_card === 1 ? this.setState({ sim_card: 0 }) : this.setState({ sim_card: 1 }) } noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
+						<ListItem onPress={() => this.state.sim_card ? this.setState({ sim_card: false }) : this.setState({ sim_card: true }) } noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
 								<Icon type={'MaterialIcons'} name={'sim-card'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
 								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>شرائح بيانات</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.sim_card === 1 ? true : false} onPress={() => this.setInstallation()} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.sim_card} onPress={() => this.state.sim_card ? this.setState({ sim_card: false }) : this.setState({ sim_card: true }) } color="#437c1a"/>
 							</Right>
 						</ListItem>
 					</List>
@@ -144,7 +144,7 @@ class JoinToVendors extends Component{
             return(<Spinner />);
         }
 
-		if (this.state.name === '' || this.state.phone === '' || this.state.IDBase64 === null || this.state.mainBase64 === null || this.state.tradBase64 === null || this.state.userImage === null ){
+		if (this.state.name === '' || this.state.phone === '' || this.state.IDBase64 === null || this.state.userImage === null ){
 			return (
 				<Button block disabled style={{marginTop: 20, marginBottom: 20, width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} light>
 					<Text style={{color: '#999', fontSize: 17, textAlign: 'center' }}>حفظ</Text>
@@ -171,7 +171,7 @@ class JoinToVendors extends Component{
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>
-                    <Text style={{ color: '#fff', textAlign: 'center', marginRight: 20, fontSize: 18 }}>الملف الشخصي</Text>
+                    <Text style={{ color: '#fff', textAlign: 'center', marginRight: 20, fontSize: 18 }}>انضم الينا </Text>
                     </Body>
                     <Left style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.goBack()}>

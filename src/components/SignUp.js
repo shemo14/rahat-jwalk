@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, KeyboardAvoidingView, Image, ScrollView, Dimensions } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Image, ScrollView, Dimensions, ImageBackground } from 'react-native';
 import { Container, Button, Content, Form, Item, Input, Icon, Header, Body, List, ListItem, Toast } from 'native-base';
 import { Spinner } from '../common'
 import { Font } from 'expo'
@@ -7,7 +7,7 @@ import Modal from "react-native-modal"
 import CONST from "../consts";
 import axios from "axios/index";
 import { DoubleBounce } from 'react-native-loader'
-import { MapView, Location, Permissions } from 'expo'
+import { MapView, Location, Permissions, Notifications } from 'expo'
 import { userLogin, profile } from '../actions'
 import { connect } from 'react-redux';
 
@@ -36,7 +36,20 @@ class SignUp extends Component{
             initMap: true,
             loader: false,
 			showToast: false,
+            token: '',
+			userId: null
         };
+    }
+
+    async locationPermission(){
+		await Permissions.askAsync(Permissions.LOCATION);
+
+		const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({});
+		const userLocation = { latitude, longitude };
+		this.setState({  initMap: false, userLocation });
+        console.log(this.state.userLocation.longitude + ' - ' + this.state.userLocation.longitude);
+
+		await this.setState({mapModal: 1});
     }
 
     componentWillMount = async () => {
@@ -45,10 +58,60 @@ class SignUp extends Component{
         })
 
 		let { status } = await Permissions.askAsync(Permissions.LOCATION);
+		if (status !== 'granted') {
+			alert('صلاحيات تحديد موقعك الحالي ملغاه');
+		}else {
+			const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({});
+			const userLocation = { latitude, longitude };
+			this.setState({  initMap: false, userLocation });
+
+        }
+
+
+		let getCity = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=';
+		getCity += this.state.userLocation.latitude + ',' + this.state.userLocation.longitude;
+		getCity += '&key=AIzaSyBPftOQyR7e_2mv9MRu-TeNoW2qaOEK0fw&language=ar&sensor=true';
+
+
+		try {
+			const { data } = await axios.get(getCity);
+			this.setState({ city: data.results[0].formatted_address });
+
+		} catch (e) {
+			console.log(e);
+		}
+
+		const formattedItem = {
+			name: this.state.city,
+			address: this.state.city,
+			latitude: this.state.userLocation.latitude,
+			longitude: this.state.userLocation.longitude
+		};
+
+		this.setState({ selectedLocation: formattedItem });
+
+		const { status: existingStatus } = await Permissions.getAsync(
+			Permissions.NOTIFICATIONS
+		);
+		let finalStatus = existingStatus;
+
+		if (existingStatus !== 'granted') {
+			const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+			finalStatus = status;
+		}
+
+		if (finalStatus !== 'granted') {
+			return;
+		}
+
+		let token = await Notifications.getExpoPushTokenAsync();
+		this.setState({ token, userId: null })
     }
 
-    setModalVisible(visible) {
-        this.setState({modalVisible: visible});
+
+
+    setModalVisible() {
+        this.locationPermission();
     }
 
 
@@ -66,14 +129,14 @@ class SignUp extends Component{
         
         if (this.state.name === '' || this.state.phone === '' || this.state.selectedLocation === null || this.state.password === '' || this.state.confirmPassword === ''){
 			return (
-				<Button block disabled style={{marginTop: 20, width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} light>
+				<Button block disabled style={{position: 'absolute', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} light>
 					<Text style={{color: '#999', fontSize: 17, textAlign: 'center', fontFamily: 'JFlat' }}>التسجيل</Text>
 				</Button>
 			);
         }
 
         return (
-            <Button block style={{marginTop: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} onPress={() => { this.signUp()  }}>
+            <Button block style={{position: 'absolute', backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} onPress={() => { this.signUp()  }}>
                 <Text style={{color: '#fff', fontSize: 17, textAlign: 'center', fontFamily: 'JFlat' }}>التسجيل</Text>
             </Button>
         );
@@ -84,7 +147,6 @@ class SignUp extends Component{
         const userLocation = { latitude, longitude };
         this.setState({  initMap: false, userLocation });
 
-        console.log(this.state.userLocation.latitude, this.state.userLocation.longitude);
     }
 
     search = async () => {
@@ -132,7 +194,7 @@ class SignUp extends Component{
         const { geometry: { location } } = item;
 
         const formattedItem = {
-            name: item.name,
+            name: item.formatted_address,
             address: item.formatted_address,
             latitude: location.lat,
             longitude: location.lng
@@ -188,8 +250,8 @@ class SignUp extends Component{
                 ref={map => this.map = map}
                 style={{ flex: 1 }}
                 initialRegion={{
-					latitude: 37.78825,
-					longitude: -122.4324,
+					latitude: this.state.userLocation.latitude,
+					longitude: this.state.userLocation.longitude,
                     latitudeDelta: 0.422,
                     longitudeDelta: 0.121,
                 }}
@@ -221,6 +283,8 @@ class SignUp extends Component{
     		msg = 'كلمة المرور اقل من ٦ احرف';
 		}else if ( this.state.email !== '' && this.state.email !== null && this.state.email.indexOf("@") === -1){
 			msg = 'البريد الالكتروني غير صحيح' ;
+		}else if ( this.state.phone.length <= 0 || this.state.phone.length !== 10){
+			msg = 'الرجاء ادخال رقم الهاتف الصحيح' ;
 		}else if (this.state.password !== this.state.confirmPassword){
 			msg = 'كلمة المرور و تأكيد كلمة المرور غير متطابق' ;
 		}
@@ -235,6 +299,8 @@ class SignUp extends Component{
 			return <View/>
 		}
 
+    	// alert(this.state.token);
+
 		this.setState({ loader: true });
         axios.post(CONST.url + 'register' ,{
             name: this.state.name,
@@ -248,8 +314,10 @@ class SignUp extends Component{
         }).then(response => {
 			this.setState({ loader: false });
 
-			const {phone, password} = this.state;
-			this.props.userLogin({ phone, password });
+			if (response.data.key === '1'){
+				const {phone, password, token} = this.state;
+				this.props.userLogin({ phone, password, token });
+			}
 
 			Toast.show({
 				text: response.data.massage,
@@ -267,10 +335,24 @@ class SignUp extends Component{
     }
 
 	componentWillReceiveProps(newProps){
-		if (newProps.auth.key === "1"){
+		if (newProps.auth !== null && newProps.auth.key === "1"){
+
+			if (this.state.userId === null){
+				this.setState({ userId: newProps.auth.data.id });
+				this.props.profile(newProps.auth.data.id);
+			}
+
 			this.props.navigation.navigate('drawerNavigation');
-			this.props.profile(newProps.auth.data.id);
 		}
+
+		if (this.props.profile !== null) {
+			Toast.show({
+				text: newProps.auth.massage,
+				type: newProps.auth.key === "1" ? "success" : "danger",
+				duration: 3000
+			});
+		}
+
 		this.setState({ loader: false });
 	}
 
@@ -283,7 +365,7 @@ class SignUp extends Component{
             <Container style={{ backgroundColor: '#fff' }}>
                 <Content contentContainerStyle={{flexGrow: 1}}>
                         <View style={{justifyContent: 'center', alignItems: 'center' }}>
-                            <Image resizeMode={'center'} style={{width: 100, height: 100, marginTop: 60}}
+                            <Image resizeMode={'center'} style={{width: 100, height: 100, marginTop: 30}}
                                    source={require('../../assets/images/logo.png')}/>
                         </View>
                         <Form>
@@ -291,7 +373,6 @@ class SignUp extends Component{
                                 <Item style={{
                                     flexDirection: 'row',
                                     borderBottomWidth: 1,
-                                    // borderBottomColor: this.state.emailError === '' ? '#ddd' : '#ff0000',
                                     padding: 3,
                                     alignSelf: 'flex-start',
                                     height: 35,
@@ -309,7 +390,6 @@ class SignUp extends Component{
                                 <Item style={{
                                     flexDirection: 'row',
                                     borderBottomWidth: 1,
-                                    // borderBottomColor: this.state.emailError === '' ? '#ddd' : '#ff0000',
                                     padding: 3,
                                     alignSelf: 'flex-start',
                                     height: 35,
@@ -325,10 +405,9 @@ class SignUp extends Component{
                                 }}>{this.state.emailError}</Text>
 
 
-                                <Item onPress={() => this.setState({ mapModal: 1 })} style={{
+                                <Item onPress={() => this.setModalVisible()} style={{
                                     flexDirection: 'row',
                                     borderBottomWidth: 1,
-                                    // borderBottomColor: this.state.emailError === '' ? '#ddd' : '#ff0000',
                                     padding: 3,
                                     alignSelf: 'flex-start',
                                     height: 35,
@@ -346,7 +425,6 @@ class SignUp extends Component{
                                 <Item style={{
                                     flexDirection: 'row',
                                     borderBottomWidth: 1,
-                                    // borderBottomColor: this.state.emailError === '' ? '#ddd' : '#ff0000',
                                     padding: 3,
                                     alignSelf: 'flex-start',
                                     height: 35,
@@ -364,7 +442,6 @@ class SignUp extends Component{
                                 <Item style={{
                                     flexDirection: 'row',
                                     borderBottomWidth: 1,
-                                    // borderBottomColor: this.state.emailError === '' ? '#ddd' : '#ff0000',
                                     padding: 3,
                                     height: 35,
                                     marginLeft: 0
@@ -381,7 +458,6 @@ class SignUp extends Component{
                                 <Item style={{
                                     flexDirection: 'row',
                                     borderBottomWidth: 1,
-                                    // borderBottomColor: this.state.emailError === '' ? '#ddd' : '#ff0000',
                                     padding: 3,
                                     height: 35,
                                     marginLeft: 0
@@ -398,7 +474,6 @@ class SignUp extends Component{
                                     <Text style={{ color: '#8c8c8c', marginBottom: 10, fontFamily: 'JFlat' }}>بالضغط علي تسجيل انت توافق علي <Text onPress={() => this.setState({ visibleModal: 1 }) } style={{ color: '#8c8c8c', fontWeight: 'bold', fontSize: 18, textDecorationLine: "underline" }}>الشروط و الاحكام</Text></Text>
                                     <Text onPress={() => this.props.navigation.navigate('login') } style={{ color: '#8c8c8c', textDecorationLine: "underline" }}>هل تمتلك حساب ؟</Text>
                                 </View>
-                                {this.renderLoading()}
                             </View>
                         </Form>
 
@@ -438,7 +513,7 @@ class SignUp extends Component{
                                         <Text style={{ color: '#747474', marginTop: 5, fontSize: 17 }}>موقعك : </Text>
                                         <View style={{ flexDirection: 'row', backgroundColor: '#f4f4f4', borderWidth: 1, height: 35,borderColor: '#ededed', borderRadius: 5, width: '80%' }}>
                                             <Icon style={{ color: '#4a862f', fontSize: 22, marginRight: 5, marginTop: 5 }} type={'Entypo'} name={'location-pin'}/>
-                                            <Input onChangeText={(query) => this.setState({ query })} onSubmitEditing={() => this.search()} style={{ width: '100%', paddingBottom: 20 }} placeholderStyle={{ color: '#d4d4d4' }} placeholder='حدد موقعك'/>
+                                            <Input value={this.state.city} onChangeText={(query) => this.setState({ query })} onSubmitEditing={() => this.search()} style={{ width: '100%', paddingBottom: 20 }} placeholderStyle={{ color: '#d4d4d4' }} placeholder='حدد موقعك'/>
                                         </View>
                                         { this.toggleSearchResult() }
 
@@ -455,18 +530,23 @@ class SignUp extends Component{
                         </View>
                     </Modal>
 
-                    <Image resizeMode={'cover'} style={{ width: '100%', height: 140, bottom: -10, position: 'absolute' }} source={require('../../assets/images/Vector_Smart_Object.png')}/>
+					<ImageBackground resizeMode={'cover'} style={{ width: '100%', height: 140, bottom: -10, position: 'absolute' }} source={require('../../assets/images/Vector_Smart_Object.png')}>
+						<View style={{ top: -50, padding: 30 }}>
+							{this.renderLoading()}
+						</View>
+					</ImageBackground>
                 </Content>
             </Container>
         )
     }
 }
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, profile }) => {
 	return {
 		message: auth.message,
 		loading: auth.loading,
-		auth: auth.user
+		auth: auth.user,
+		user: profile.user
 	};
 };
 export default connect(mapStateToProps, { userLogin, profile })(SignUp);
