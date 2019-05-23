@@ -117,7 +117,7 @@ const styles = {
     profileImage: {
         height: 80,
         width: 80,
-        borderRadius: 75,
+        borderRadius: 40,
         borderWidth: 3,
         borderColor: '#639d57'
     },

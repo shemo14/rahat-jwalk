@@ -62,7 +62,7 @@ class Problems extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>
@@ -74,10 +74,10 @@ class Problems extends Component{
                         </Button>
                     </Left>
                 </Header>
-                <Content style={{ padding: 10 }}>
+                <Content style={{ padding: 5 }}>
                     { this.renderLoader() }
                     <View style={{ flex: 1, width: '100%' }}>
-                        <List style={{ flex: 1 }}>
+                        <List style={{ flex: 1, marginLeft: 14 }}>
                             { this.renderListItems() }
                         </List>
                     </View>

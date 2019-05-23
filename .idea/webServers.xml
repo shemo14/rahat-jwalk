@@ -10,8 +10,8 @@
           <option name="port" value="21" />
         </fileTransfer>
       </webServer>
-      <webServer id="643d570f-653f-4fb6-a81e-a6f356ba21d6" name="camy" url="http://gator3155.hostgator.com">
-        <fileTransfer host="gator3155.hostgator.com" port="21" rootFolder="/public_html">
+      <webServer id="643d570f-653f-4fb6-a81e-a6f356ba21d6" name="camy" url="http://camycom.com">
+        <fileTransfer host="camycom.com" port="21" rootFolder="/public_html">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
@@ -29,7 +29,7 @@
       <webServer id="dec2797a-4870-4f62-86ca-38eeb424ebc7" name="aait" url="http://aait.sa">
         <fileTransfer host="aait.sa" port="21" rootFolder="/public_html">
           <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+            <advancedOptions dataProtectionLevel="Private" shareSSLContext="true" />
           </advancedOptions>
           <option name="port" value="21" />
         </fileTransfer>
@@ -40,6 +40,22 @@
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
           <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="fba72754-89da-4208-bfa0-5ca3ef45f7ec" name="moda-stile" url="http://moda.aait-sa.com">
+        <fileTransfer host="moda.aait-sa.com" port="21" rootFolder="/public_html">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="1adcfd02-a972-454e-950a-a75a52c26f80" name="Ana-B5er" url="http://45.76.159.126">
+        <fileTransfer host="45.76.159.126" port="22" rootFolder="/var/www/html" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
         </fileTransfer>
       </webServer>
     </option>

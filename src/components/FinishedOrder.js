@@ -41,18 +41,18 @@ class FinishedOrder extends Component{
 
     renderOrderDetails(type, problems, accessories){
         if (type === "1"){
-            return (<Text>المشكلة :
+            return (<Text style={{ writingDirection: 'rtl' }}>المشكلة :
                 {
                     problems.map(( problem, i )=> (
-                        <Text key={i}>{problem.title} , </Text>
+                        <Text style={{ writingDirection: 'rtl' }} key={i}>{problem.title} , </Text>
                     ))
                 }
             </Text>);
         }else if(type === "3"){
-            return (<Text> الاكسسوارات :
+            return (<Text style={{ writingDirection: 'rtl' }}>  الاكسسوارات :
                 {
                     accessories.map(( accessory, i ) => (
-                        <Text key={i}>{accessory.title} , </Text>
+                        <Text style={{ writingDirection: 'rtl' }} key={i}>{accessory.title} , </Text>
                     ))
                 }
             </Text>);
@@ -106,9 +106,9 @@ class FinishedOrder extends Component{
                 </View>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 3 }}>
-                        <Text><Text style={{ width: 50 }}>نوع الطلب :</Text> { order.type_text } </Text>
+                        <Text style={{ writingDirection: 'rtl' }}><Text style={{ width: 50, writingDirection: 'rtl' }}>نوع الطلب :</Text> { order.type_text } </Text>
                         { this.renderOrderDetails(order.type, order.problem, order.accessory) }
-                        <Text><Text style={{ width: 50 }}>الموقع :</Text> { order.city }</Text>
+                        <Text style={{ writingDirection: 'rtl' }}><Text style={{ width: 50, writingDirection: 'rtl' }}>الموقع :</Text> { order.city }</Text>
                     </View>
 
                     <TouchableOpacity style={{ flexDirection: 'row', alignSelf: 'flex-end', alignItems: 'center', flex: 1 }} onPress={() => this.resendOrder(order.id)}>
@@ -127,7 +127,7 @@ class FinishedOrder extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>

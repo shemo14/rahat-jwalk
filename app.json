@@ -4,12 +4,12 @@
     "description": "This project is really great.",
     "slug": "rahat-jwalk",
     "privacy": "public",
-    "sdkVersion": "31.0.0",
+    "sdkVersion": "32.0.0",
     "platforms": [
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "2.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -24,17 +24,17 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.rahat.jwalk",
+      "bundleIdentifier": "com.rahat.jawalak",
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "AIzaSyAl2Y8u_n_UQQKQq3K5nBUu2vUnqxg64uk"
+        "googleMapsApiKey": "AIzaSyDDGCkEv3jHUzSA1FVI26h_OadsG297Pe8"
       }
     },
     "android": {
-      "package": "com.rahat.jwalk",
+      "package": "com.raht.jawalak",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyAl2Y8u_n_UQQKQq3K5nBUu2vUnqxg64uk"
+          "apiKey": "AIzaSyDDGCkEv3jHUzSA1FVI26h_OadsG297Pe8"
         }
       },
       "permissions": [
@@ -46,3 +46,17 @@
     }
   }
 }
+
+
+//aliseName: rahat-jwalk,
+//password: 12341234
+//storeKey: 12341234
+
+
+//Keystore password: 37b82fcea62f4fda92c597b32ae87752
+//Key alias:         QG1fc2hhbXMvcmFoYXQtandhbGs=
+//Key password:      11dd6c988f6641db9fe071dc1f2dc1a7
+
+
+
+// aarahatjawalak2486@gmail.com --  Ewu12345 -- rahat_jawalak -- oysc-fliv-ilsn-ovsq

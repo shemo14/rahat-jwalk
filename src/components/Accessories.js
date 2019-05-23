@@ -45,7 +45,7 @@ class Accessories extends Component{
     }
 
     onPressConfirm(){
-        this.props.navigation.navigate('determinedLocation', { params: this.state.params, accessoryList: this.state.checkedAccessory });
+        this.props.navigation.navigate('notes', { params: this.state.params, accessoryList: this.state.checkedAccessory });
     }
 
     renderLoader(){
@@ -80,7 +80,7 @@ class Accessories extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>

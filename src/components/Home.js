@@ -8,7 +8,6 @@ import axios from "axios/index";
 import {connect} from "react-redux";
 
 
-
 class Home extends Component{
     constructor(props){
         super(props);
@@ -27,12 +26,9 @@ class Home extends Component{
         drawerIcon: ( <Icon style={{ fontSize: 20, color: '#437c1a' }} type={'FontAwesome'} name={'home'}/> )
     });
 
-    // componentWillMount() {
-    //     Notifications.addListener(this.handleNotification )
-	// }
-
 
 	renderLoader(){
+	    console.log('init map ..', this.state.initMap);
         if (this.state.initMap || this.state.binsLocations === []){
             return (
                 <View style={{ alignItems: 'center', justifyContent: 'center', height: 500 }}>
@@ -168,12 +164,17 @@ class Home extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 5 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 5 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>
                         <Text style={{ color: '#fff', textAlign: 'center', marginRight: 25, fontSize: 18 }}>الرئيسية</Text>
                     </Body>
+                    <Right style={{ flex: 0 }}>
+                        <Button transparent onPress={() => this.props.navigation.navigate('notification')}>
+                            <Icon name='ios-notifications' type='Ionicons' style={{ color: '#fff', fontSize: 30, marginTop: 5 }} />
+                        </Button>
+                    </Right>
                 </Header>
                 { this.renderLoader() }
                 <Animated.View style={{ backgroundColor: '#fff', position: 'absolute', bottom: this.state.fadeAnim, width: '100%' }}>
@@ -184,34 +185,34 @@ class Home extends Component{
                     <List style={{ flex: 2, marginTop: 20, marginBottom: 20 }}>
                         <ListItem style={{height: 50}} onPress={() => this.props.navigation.navigate('brands', {navigation: this.props.navigation, type: 1})}>
                             <Left>
-                                <View style={{ borderRadius: 30, padding: 5, backgroundColor: '#437c1a', paddingLeft: 9, paddingRight: 9 }}>
-                                    <Icon type={'Ionicons'} name={'ios-settings'} style={{color: '#fff', fontSize: 30, width: 23}}/>
+                                <View style={{ borderRadius: 30, backgroundColor: '#437c1a', height: 40, width: 40, paddingTop: 5 }}>
+                                    <Icon type={'Ionicons'} name={'ios-settings'} style={{color: '#fff', fontSize: 30, width: 33 }}/>
                                 </View>
-                                <Text style={{ color: '#5b5b5b', marginTop: 8, fontSize: 18, marginLeft: 15, marginRight: 4 }}>الصيانة</Text>
+                                <Text style={{ color: '#5b5b5b', marginTop: 8, fontSize: 18, marginLeft: 15, marginRight: 4, height: 22 }}>الصيانة</Text>
                             </Left>
                         </ListItem>
                         <ListItem style={{ height: 50 }} onPress={() => this.props.navigation.navigate('brands', {navigation: this.props.navigation, type: 2})}>
                             <Left>
-                                <View style={{ borderRadius: 20, padding: 6, backgroundColor: '#437c1a', paddingLeft: 8, paddingRight: 7  }}>
-                                    <Icon type={'Entypo'} name={'mobile'} style={{ color: '#fff', fontSize: 27, width: 25 }}/>
+                                <View style={{ borderRadius: 20, backgroundColor: '#437c1a', height: 40, width: 40, paddingTop: 5  }}>
+                                    <Icon type={'Entypo'} name={'mobile'} style={{ color: '#fff', fontSize: 27, width: 33 }}/>
                                 </View>
-                                <Text style={{ color: '#5b5b5b', marginTop: 8, fontSize: 18, marginLeft: 15, marginRight: 4 }}>شراء جوال</Text>
+                                <Text style={{ color: '#5b5b5b', marginTop: 8, fontSize: 18, marginLeft: 15, marginRight: 4, height: 22 }}>شراء جوال</Text>
                             </Left>
                         </ListItem>
                         <ListItem style={{ height: 50 }} onPress={() => this.props.navigation.navigate('brands', {navigation: this.props.navigation, type: 3})}>
                             <Left>
-                                <View style={{ borderRadius: 20, padding: 6, backgroundColor: '#437c1a', paddingLeft: 8, paddingRight: 7  }}>
-                                    <Icon type={'MaterialCommunityIcons'} name={'cellphone-screenshot'} style={{ color: '#fff', fontSize: 27, width: 25 }}/>
+                                <View style={{ borderRadius: 20, backgroundColor: '#437c1a', height: 40, width: 40, paddingTop: 5  }}>
+                                    <Icon type={'MaterialCommunityIcons'} name={'cellphone-screenshot'} style={{ color: '#fff', fontSize: 27, width: 33 }}/>
                                 </View>
-                                <Text style={{ color: '#5b5b5b', marginTop: 8, fontSize: 18, marginLeft: 15, marginRight: 4 }}>اكسسوارات للجوال</Text>
+                                <Text style={{ color: '#5b5b5b', marginTop: 8, fontSize: 18, marginLeft: 15, marginRight: 4, height: 22 }}>اكسسوارات للجوال</Text>
                             </Left>
                         </ListItem>
-                        <ListItem style={{ height: 50 }} onPress={() => this.props.navigation.navigate('simCards', {navigation: this.props.navigation, type: 4})}>
+                        <ListItem style={{ height: 50 }} onPress={() => this.props.navigation.navigate('brands', {navigation: this.props.navigation, type: 4})}>
                             <Left>
-                                <View style={{ borderRadius: 20, padding: 6, backgroundColor: '#437c1a', paddingLeft: 8, paddingRight: 7  }}>
-                                    <Icon type={'MaterialIcons'} name={'sim-card'} style={{ color: '#fff', fontSize: 27, width: 25 }}/>
+                                <View style={{ borderRadius: 20, backgroundColor: '#437c1a', height: 40, width: 40, paddingTop: 5  }}>
+                                    <Icon type={'MaterialIcons'} name={'sim-card'} style={{ color: '#fff', fontSize: 27, width: 33 }}/>
                                 </View>
-                                <Text style={{ color: '#5b5b5b', marginTop: 8, fontSize: 18, marginLeft: 15, marginRight: 4 }}>شرائح بيانات الانترنت</Text>
+                                <Text style={{ color: '#5b5b5b', marginTop: 8, fontSize: 18, marginLeft: 15, marginRight: 4, height: 22 }}>خدمات اخري</Text>
                             </Left>
                         </ListItem>
                     </List>

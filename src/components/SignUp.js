@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, KeyboardAvoidingView, Image, ScrollView, Dimensions, ImageBackground } from 'react-native';
+import {View, Text, KeyboardAvoidingView, Image, ScrollView, Dimensions, ImageBackground, Platform} from 'react-native';
 import { Container, Button, Content, Form, Item, Input, Icon, Header, Body, List, ListItem, Toast } from 'native-base';
 import { Spinner } from '../common'
-import { Font } from 'expo'
 import Modal from "react-native-modal"
 import CONST from "../consts";
 import axios from "axios/index";
@@ -12,10 +11,10 @@ import { userLogin, profile } from '../actions'
 import { connect } from 'react-redux';
 
 const height = Dimensions.get('window').height;
+const deviceType = Platform.OS;
 class SignUp extends Component{
     constructor(props){
         super(props);
-        this.loadFontAsync();
         this.state= {
             name: '',
             phone: '',
@@ -25,6 +24,7 @@ class SignUp extends Component{
             lng: '',
             city: '',
             confirmPassword: '',
+            howToKnowUs: '',
             fontLoaded: false,
             visibleModal: null,
             roles: '',
@@ -70,7 +70,9 @@ class SignUp extends Component{
 
 		let getCity = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=';
 		getCity += this.state.userLocation.latitude + ',' + this.state.userLocation.longitude;
-		getCity += '&key=AIzaSyBPftOQyR7e_2mv9MRu-TeNoW2qaOEK0fw&language=ar&sensor=true';
+		getCity += '&key=AIzaSyDYjCVA8YFhqN2pGiW4I8BCwhlxThs1Lc0&language=ar&sensor=true';
+
+        console.log('locations data', getCity);
 
 
 		try {
@@ -115,13 +117,6 @@ class SignUp extends Component{
     }
 
 
-    loadFontAsync(){
-        Font.loadAsync({ JFlat: require('../../assets/fonts/Quicksand-Regular.ttf') })
-            .then(() => this.setState({ fontLoaded: true }))
-            .catch((e) => console.log(e));
-    }
-
-
     renderLoading(){
         if (this.state.loader){
             return(<Spinner />);
@@ -129,15 +124,15 @@ class SignUp extends Component{
         
         if (this.state.name === '' || this.state.phone === '' || this.state.selectedLocation === null || this.state.password === '' || this.state.confirmPassword === ''){
 			return (
-				<Button block disabled style={{position: 'absolute', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} light>
-					<Text style={{color: '#999', fontSize: 17, textAlign: 'center', fontFamily: 'JFlat' }}>التسجيل</Text>
+				<Button disabled style={{ width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} light>
+					<Text style={{color: '#999', fontSize: 17, textAlign: 'center' }}>التسجيل</Text>
 				</Button>
 			);
         }
 
         return (
-            <Button block style={{position: 'absolute', backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} onPress={() => { this.signUp()  }}>
-                <Text style={{color: '#fff', fontSize: 17, textAlign: 'center', fontFamily: 'JFlat' }}>التسجيل</Text>
+            <Button style={{ backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} onPress={() => { this.signUp()  }}>
+                <Text style={{color: '#fff', fontSize: 17, textAlign: 'center'}}>التسجيل</Text>
             </Button>
         );
     }
@@ -146,14 +141,15 @@ class SignUp extends Component{
         const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({});
         const userLocation = { latitude, longitude };
         this.setState({  initMap: false, userLocation });
-
     }
 
     search = async () => {
 
         let endPoint = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=';
-        endPoint += this.state.query;
-        endPoint += '&key=AIzaSyBPftOQyR7e_2mv9MRu-TeNoW2qaOEK0fw&language=ar';
+        endPoint += this.state.city;
+        endPoint += '&key=AIzaSyDYjCVA8YFhqN2pGiW4I8BCwhlxThs1Lc0&language=ar';
+
+        console.log('city url', endPoint);
 
         try {
             const { data } = await axios.get(endPoint);
@@ -310,6 +306,7 @@ class SignUp extends Component{
             lat: this.state.selectedLocation.latitude,
             lng: this.state.selectedLocation.longitude,
             email: this.state.email,
+            howToKnowUs: this.state.howToKnowUs,
             device_id: Expo.Constants.deviceId
         }).then(response => {
 			this.setState({ loader: false });
@@ -357,125 +354,132 @@ class SignUp extends Component{
 	}
 
     render(){
-        if (!this.state.fontLoaded){
-            return ( <View/> );
-        }
 
         return(
             <Container style={{ backgroundColor: '#fff' }}>
                 <Content contentContainerStyle={{flexGrow: 1}}>
-                        <View style={{justifyContent: 'center', alignItems: 'center' }}>
-                            <Image resizeMode={'center'} style={{width: 100, height: 100, marginTop: 30}}
-                                   source={require('../../assets/images/logo.png')}/>
-                        </View>
-                        <Form>
-                            <View style={{flex: 2, padding: 20}}>
-                                <Item style={{
-                                    flexDirection: 'row',
-                                    borderBottomWidth: 1,
-                                    padding: 3,
-                                    alignSelf: 'flex-start',
-                                    height: 35,
-                                    marginLeft: 0
-                                }}>
-                                    <Icon style={{color: '#277c19', fontSize: 20}} name={'user'} type={'FontAwesome'}/>
-                                    <Input autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(name) => this.setState({name})} style={{ alignSelf: 'flex-end' , color: '#277c19', height: 35 }} placeholder='اسم المستخدم' value={this.state.name}/>
-                                </Item>
-                                <Text style={{
-                                    color: '#ff0000',
-                                    textAlign: 'center',
-                                    marginTop: 2
-                                }}>{this.state.emailError}</Text>
+                    <View style={{justifyContent: 'center', alignItems: 'center' }}>
+                        <Image resizeMode={'center'} style={{width: 100, height: 130, marginTop: 30}}
+                               source={require('../../assets/images/logo.png')}/>
+                    </View>
+                    <Form>
+                        <View style={{flex: 2, padding: 20}}>
+                            <Item style={{
+                                flexDirection: 'row',
+                                borderBottomWidth: 1,
+                                padding: 3,
+                                alignSelf: 'flex-start',
+                                height: 35,
+                                marginLeft: 0
+                            }}>
+                                <Icon style={{color: '#277c19', fontSize: 20}} name={'user'} type={'FontAwesome'}/>
+                                <Input autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(name) => this.setState({name})} style={{ alignSelf: 'flex-end' , color: '#277c19', height: 35 ,  textAlign: 'right' }} placeholder='اسم المستخدم' value={this.state.name}/>
+                            </Item>
+                            <Text style={{
+                                color: '#ff0000',
+                                textAlign: 'center',
+                                marginTop: 2
+                            }}>{this.state.emailError}</Text>
 
-                                <Item style={{
-                                    flexDirection: 'row',
-                                    borderBottomWidth: 1,
-                                    padding: 3,
-                                    alignSelf: 'flex-start',
-                                    height: 35,
-                                    marginLeft: 0
-                                }}>
-                                    <Icon style={{color: '#277c19', fontSize: 20 }} name={'phone'} type={'FontAwesome'}/>
-                                    <Input keyboardType='phone-pad' placeholderStyle={{ textAlign: 'right' }} onChangeText={(phone) => this.setState({phone})} style={{ alignSelf: 'flex-end' }} placeholder='رقم الهاتف' value={this.state.phone}/>
-                                </Item>
-                                <Text style={{
-                                    color: '#ff0000',
-                                    textAlign: 'center',
-                                    marginTop: 2
-                                }}>{this.state.emailError}</Text>
+                            <Item style={{
+                                flexDirection: 'row',
+                                borderBottomWidth: 1,
+                                padding: 3,
+                                alignSelf: 'flex-start',
+                                height: 35,
+                                marginLeft: 0
+                            }}>
+                                <Icon style={{color: '#277c19', fontSize: 20 }} name={'phone'} type={'FontAwesome'}/>
+                                <Input keyboardType='phone-pad' placeholderStyle={{ textAlign: 'right' }} onChangeText={(phone) => this.setState({phone})} style={{ alignSelf: 'flex-end' ,  textAlign: 'right' }} placeholder='رقم الهاتف' value={this.state.phone}/>
+                            </Item>
+                            <Text style={{
+                                color: '#ff0000',
+                                textAlign: 'center',
+                                marginTop: 2
+                            }}>{this.state.emailError}</Text>
 
 
-                                <Item onPress={() => this.setModalVisible()} style={{
-                                    flexDirection: 'row',
-                                    borderBottomWidth: 1,
-                                    padding: 3,
-                                    alignSelf: 'flex-start',
-                                    height: 35,
-                                    marginLeft: 0
-                                }}>
-                                    <Icon style={{color: '#277c19', fontSize: 20 }} name={'location'} type={'Entypo'}/>
-                                    <Input disabled autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} style={{ alignSelf: 'flex-end', color: '#277c19', height: 35 }} placeholder='المدينة' value={ this.state.selectedLocation !== null && this.state.selectedLocation !== [] ? this.state.selectedLocation.name : ''}/>
-                                </Item>
-                                <Text style={{
-                                    color: '#ff0000',
-                                    textAlign: 'center',
-                                    marginTop: 2
-                                }}>{this.state.emailError}</Text>
+                            <Item onPress={() => this.setModalVisible()} style={{
+                                flexDirection: 'row',
+                                borderBottomWidth: 1,
+                                padding: 3,
+                                alignSelf: 'flex-start',
+                                height: 35,
+                                marginLeft: 0
+                            }}>
+                                <Icon style={{color: '#277c19', fontSize: 20 }} name={'location'} type={'Entypo'}/>
+                                <Input disabled autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} style={{ alignSelf: 'flex-end', color: '#277c19', height: 35 ,  textAlign: 'right' }} placeholder='المدينة' value={ this.state.selectedLocation !== null && this.state.selectedLocation !== [] ? this.state.selectedLocation.name : ''}/>
+                            </Item>
+                            <Text style={{
+                                color: '#ff0000',
+                                textAlign: 'center',
+                                marginTop: 2
+                            }}>{this.state.emailError}</Text>
 
-                                <Item style={{
-                                    flexDirection: 'row',
-                                    borderBottomWidth: 1,
-                                    padding: 3,
-                                    alignSelf: 'flex-start',
-                                    height: 35,
-                                    marginLeft: 0
-                                }}>
-                                    <Icon style={{color: '#277c19', fontSize: 20 }} name={'email'} type={'MaterialCommunityIcons'}/>
-                                    <Input autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(email) => this.setState({email})} style={{ alignSelf: 'flex-end', color: '#277c19', height: 35 }} placeholder='البريد الالكتروني (اختياري)' value={this.state.email}/>
-                                </Item>
-                                <Text style={{
-                                    color: '#ff0000',
-                                    textAlign: 'center',
-                                    marginTop: 2
-                                }}>{this.state.emailError}</Text>
+                            <Item style={{
+                                flexDirection: 'row',
+                                borderBottomWidth: 1,
+                                padding: 3,
+                                alignSelf: 'flex-start',
+                                height: 35,
+                                marginLeft: 0
+                            }}>
+                                <Icon style={{color: '#277c19', fontSize: 20 }} name={'email'} type={'MaterialCommunityIcons'}/>
+                                <Input autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(email) => this.setState({email})} style={{ alignSelf: 'flex-end', color: '#277c19', height: 35,  textAlign: 'right'  }} placeholder='البريد الالكتروني (اختياري)' value={this.state.email}/>
+                            </Item>
+                            <Text style={{
+                                color: '#ff0000',
+                                textAlign: 'center',
+                                marginTop: 2
+                            }}>{this.state.emailError}</Text>
 
-                                <Item style={{
-                                    flexDirection: 'row',
-                                    borderBottomWidth: 1,
-                                    padding: 3,
-                                    height: 35,
-                                    marginLeft: 0
-                                }}>
-                                    <Icon style={{color: '#277c19', fontSize: 20 }} name={'lock'} type={'FontAwesome'}/>
-                                    <Input style={{ textAlign: 'right', color: '#277c19', height: 35 }} autoCapitalize='none' onChangeText={(password) => this.setState({password})} secureTextEntry placeholder='الرقم السري' value={this.state.password}/>
-                                </Item>
-                                <Text style={{
-                                    color: '#ff0000',
-                                    textAlign: 'center',
-                                    marginTop: 2
-                                }}>{this.state.passwordError}</Text>
+                            <Item style={{
+                                flexDirection: 'row',
+                                borderBottomWidth: 1,
+                                padding: 3,
+                                height: 35,
+                                marginLeft: 0
+                            }}>
+                                <Icon style={{color: '#277c19', fontSize: 20 }} name={'lock'} type={'FontAwesome'}/>
+                                <Input style={{ textAlign: 'right', color: '#277c19', height: 35 }} autoCapitalize='none' onChangeText={(password) => this.setState({password})} secureTextEntry placeholder='الرقم السري' value={this.state.password}/>
+                            </Item>
+                            <Text style={{
+                                color: '#ff0000',
+                                textAlign: 'center',
+                                marginTop: 2
+                            }}>{this.state.passwordError}</Text>
 
-                                <Item style={{
-                                    flexDirection: 'row',
-                                    borderBottomWidth: 1,
-                                    padding: 3,
-                                    height: 35,
-                                    marginLeft: 0
-                                }}>
-                                    <Icon style={{color: '#277c19', fontSize: 20 }} name={'lock'} type={'FontAwesome'}/>
-                                    <Input style={{ textAlign: 'right', color: '#277c19', height: 35 }} autoCapitalize='none' onChangeText={(confirmPassword) => this.setState({confirmPassword})} secureTextEntry placeholder='تأكيد الرقم السري' value={this.state.confirmPassword}/>
-                                </Item>
-                                <Text style={{
-                                    color: '#ff0000',
-                                    textAlign: 'center',
-                                    marginTop: 2
-                                }}>{this.state.passwordError}</Text>
-                                <View style={{justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text style={{ color: '#8c8c8c', marginBottom: 10, fontFamily: 'JFlat' }}>بالضغط علي تسجيل انت توافق علي <Text onPress={() => this.setState({ visibleModal: 1 }) } style={{ color: '#8c8c8c', fontWeight: 'bold', fontSize: 18, textDecorationLine: "underline" }}>الشروط و الاحكام</Text></Text>
-                                    <Text onPress={() => this.props.navigation.navigate('login') } style={{ color: '#8c8c8c', textDecorationLine: "underline" }}>هل تمتلك حساب ؟</Text>
-                                </View>
+                            <Item style={{
+                                flexDirection: 'row',
+                                borderBottomWidth: 1,
+                                padding: 3,
+                                height: 35,
+                                marginLeft: 0
+                            }}>
+                                <Icon style={{color: '#277c19', fontSize: 20 }} name={'lock'} type={'FontAwesome'}/>
+                                <Input style={{ textAlign: 'right', color: '#277c19', height: 35 }} autoCapitalize='none' onChangeText={(confirmPassword) => this.setState({confirmPassword})} secureTextEntry placeholder='تأكيد الرقم السري' value={this.state.confirmPassword}/>
+                            </Item>
+                            <Item style={{
+                                flexDirection: 'row',
+                                borderBottomWidth: 1,
+                                padding: 3,
+                                height: 35,
+                                marginLeft: 0
+                            }}>
+                                <Icon style={{color: '#277c19', fontSize: 20 }} name={'info'} type={'Feather'}/>
+                                <Input style={{ textAlign: 'right', color: '#277c19', height: 35 }} autoCapitalize='none' onChangeText={(howToKnowUs) => this.setState({howToKnowUs})} placeholder='كيف عرفت عنا' value={this.state.howToKnowUs}/>
+                            </Item>
+                            <Text style={{
+                                color: '#ff0000',
+                                textAlign: 'center',
+                                marginTop: 2
+                            }}>{this.state.passwordError}</Text>
+                            <View style={{justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={{ color: '#8c8c8c', marginBottom: 10 }}>بالضغط علي تسجيل انت توافق علي <Text onPress={() => this.setState({ visibleModal: 1 }) } style={{ color: '#8c8c8c', fontWeight: 'bold', fontSize: 18, textDecorationLine: "underline" }}>الشروط و الاحكام</Text></Text>
+                                <Text onPress={() => this.props.navigation.navigate('login') } style={{ color: '#8c8c8c', textDecorationLine: "underline" }}>هل تمتلك حساب ؟</Text>
                             </View>
-                        </Form>
+                        </View>
+                    </Form>
 
                     <Modal isVisible={this.state.visibleModal === 1} onBackdropPress={() => this.setState({ visibleModal: null })}>
                         <View style={{ backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', borderRadius: 10, height: (70/100)*height , borderColor: 'rgba(0, 0, 0, 0.1)', }}>
@@ -508,17 +512,17 @@ class SignUp extends Component{
                             </Header>
 
                             <Content style={{ padding: 10 }}>
-                                <View style={{ flex: 1, marginTop: 20 }}>
+                                <View style={{ flex: 1, marginTop: 20 , paddingLeft:deviceType === 'ios' ?20 : 0, paddingRight:deviceType === 'ios' ?5:0 , width:deviceType === 'ios' ?'100%' : 'auto'}}>
                                     <View style={{ flexDirection: 'row', marginBottom: 20 }}>
                                         <Text style={{ color: '#747474', marginTop: 5, fontSize: 17 }}>موقعك : </Text>
                                         <View style={{ flexDirection: 'row', backgroundColor: '#f4f4f4', borderWidth: 1, height: 35,borderColor: '#ededed', borderRadius: 5, width: '80%' }}>
                                             <Icon style={{ color: '#4a862f', fontSize: 22, marginRight: 5, marginTop: 5 }} type={'Entypo'} name={'location-pin'}/>
-                                            <Input value={this.state.city} onChangeText={(query) => this.setState({ query })} onSubmitEditing={() => this.search()} style={{ width: '100%', paddingBottom: 20 }} placeholderStyle={{ color: '#d4d4d4' }} placeholder='حدد موقعك'/>
+                                            <Input value={this.state.city} onChangeText={(city) => this.setState({ city })} onSubmitEditing={() => this.search()} style={{ width: '100%', paddingBottom: 20 }} placeholderStyle={{ color: '#d4d4d4' }} placeholder='حدد موقعك'/>
                                         </View>
                                         { this.toggleSearchResult() }
 
                                     </View>
-                                    <View style={{ borderColor: '#71a768', borderWidth: 1, width: '100%', height: (54/100)*height }}>
+                                    <View style={{ borderColor: '#71a768', borderWidth: 1, width: '100%', height: (54/100)*height, zIndex:deviceType === 'ios' ?-1 : 1  }}>
                                         { this.renderLoader() }
                                     </View>
                                 </View>
@@ -529,12 +533,12 @@ class SignUp extends Component{
                             </View>
                         </View>
                     </Modal>
+                    <View style={{  padding: 30 }}>
+                        {this.renderLoading()}
+                    </View>
+                    <ImageBackground resizeMode={'cover'} style={{ width: '100%', height: 140, bottom: -10, position: 'absolute' , zIndex:-1 }} source={require('../../assets/images/Vector_Smart_Object.png')}>
 
-					<ImageBackground resizeMode={'cover'} style={{ width: '100%', height: 140, bottom: -10, position: 'absolute' }} source={require('../../assets/images/Vector_Smart_Object.png')}>
-						<View style={{ top: -50, padding: 30 }}>
-							{this.renderLoading()}
-						</View>
-					</ImageBackground>
+                    </ImageBackground>
                 </Content>
             </Container>
         )

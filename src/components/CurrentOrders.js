@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import { Button, Icon, Container, Header, Right, Body, Content, Left, List, ListItem } from 'native-base';
 import CONST from "../consts";
 import axios from "axios/index";
 import { DoubleBounce } from 'react-native-loader';
 import {connect} from "react-redux";
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
-
-
 
 class CurrentOrders extends Component{
     constructor(props){
@@ -38,12 +35,12 @@ class CurrentOrders extends Component{
         }
     }
 
-    renderOrderDetails(type, problems, accessories){
+    renderOrderDetails(type, problems, accessories, order){
         if (type === "1"){
-            return (<Text>المشكلة :
+            return (<Text style={{ writingDirection: 'rtl' }}>المشكلة :
                 {
                     problems.map(( problem, i )=> (
-                        <Text key={i}>{problem.title} , </Text>
+                        <Text style={{ writingDirection: 'rtl' }} key={i}>{problem.title} , </Text>
                     ))
                 }
             </Text>);
@@ -51,9 +48,13 @@ class CurrentOrders extends Component{
             return (<Text> الاكسسوارات :
                 {
                     accessories.map(( accessory, i ) => (
-                        <Text key={i}>{accessory.title} , </Text>
+                        <Text style={{ writingDirection: 'rtl' }} key={i}>{accessory.title} , </Text>
                     ))
                 }
+            </Text>);
+        }else if(type == 4){
+            return (<Text> الخدمة :
+                { order.service }
             </Text>);
         }
     }
@@ -66,9 +67,9 @@ class CurrentOrders extends Component{
                 <View style={{ borderBottomWidth: 1, borderBottomColor: '#f7f7f7', marginBottom: 3 }}>
                     <Text style={{ color: '#949494', fontSize: 18, textAlign: 'left' }}>{ order.model }</Text>
                 </View>
-                <Text><Text style={{ width: 50 }}>نوع الطلب :</Text> { order.type_text } </Text>
-                { this.renderOrderDetails(order.type, order.problem, order.accessory) }
-                <Text><Text style={{ width: 50 }}>الموقع :</Text> { order.city }</Text>
+                <Text style={{ writingDirection: 'rtl' }}><Text style={{ width: 50, writingDirection: 'rtl' }}>نوع الطلب :</Text> { order.type_text } </Text>
+                { this.renderOrderDetails(order.type, order.problem, order.accessory, order) }
+                <Text style={{ writingDirection: 'rtl' }}><Text style={{ width: 50, writingDirection: 'rtl' }}>الموقع :</Text> { order.city }</Text>
                 </Body>
             </ListItem>
         ));
@@ -80,7 +81,7 @@ class CurrentOrders extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>
@@ -94,7 +95,7 @@ class CurrentOrders extends Component{
                 </Header>
                 { this.renderLoader() }
                 <Content style={{ padding: 10 }}>
-                    <View>
+                    <View style={{ marginLeft: Platform.OS === 'ios' ? 20 : 0 }}>
                         <List>
                             { this.renderListItems() }
                         </List>

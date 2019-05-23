@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, Dimensions, TouchableOpacity, Platform } from 'react-native';
 import {Button, Icon, Container, Header, Right, Body, Content, Left, List, ListItem, Radio, Toast} from 'native-base';
 import CONST from "../consts";
 import axios from "axios/index";
@@ -159,7 +159,7 @@ class ChooseOffers extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>
@@ -173,7 +173,7 @@ class ChooseOffers extends Component{
                 </Header>
                 { this.renderLoader() }
                 <Content style={{ padding: 10 }}>
-                    <View>
+                    <View style={{ marginLeft: Platform.OS === 'ios' ? 20 : 0 }}>
                         <AnimatedCircularProgress
                             size={65}
                             width={2}
@@ -189,25 +189,25 @@ class ChooseOffers extends Component{
                             }
                         </AnimatedCircularProgress>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
-                            <View style={{ flexDirection: 'row' }} >
-                                <Radio selected={this.state.near} onPress={() => this.selectFillteration(1)} style={{ marginRight: 5 }} selectedColor='#437c1a' />
+                            <TouchableOpacity onPress={() => this.selectFillteration(1)} style={{ flexDirection: 'row' }} >
+                                <Radio selected={this.state.near} onPress={() => this.selectFillteration(1)} style={{ marginRight: 10, width: 20, height: 10, bottom: 5, left: 3 }} selectedColor='#437c1a' />
                                 <Text>الاقرب</Text>
-                            </View>
+                            </TouchableOpacity>
 
-                            <View style={{ flexDirection: 'row' }} >
-                                <Radio selected={this.state.price} onPress={() => this.selectFillteration(2)} style={{ marginRight: 5 }} selectedColor='#437c1a'/>
+                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.selectFillteration(2)}>
+                                <Radio selected={this.state.price} onPress={() => this.selectFillteration(2)} style={{ marginRight: 10, width: 20, height: 10, bottom: 5, left: 3 }} selectedColor='#437c1a'/>
                                 <Text>السعر</Text>
-                            </View>
+                            </TouchableOpacity>
 
-                            <View style={{ flexDirection: 'row' }} >
-                                <Radio selected={this.state.time} onPress={() => this.selectFillteration(3)} style={{ marginRight: 5 }} selectedColor='#437c1a'/>
+                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.selectFillteration(3)}>
+                                <Radio selected={this.state.time} onPress={() => this.selectFillteration(3)} style={{ marginRight: 10, width: 20, height: 10, bottom: 5, left: 3}} selectedColor='#437c1a'/>
                                 <Text>المدة</Text>
-                            </View>
+                            </TouchableOpacity>
 
-                            <View style={{ flexDirection: 'row' }} >
-                                <Radio selected={this.state.rate} onPress={() => this.selectFillteration(4)} style={{ marginRight: 5 }} selectedColor='#437c1a'/>
+                            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.selectFillteration(4)}>
+                                <Radio selected={this.state.rate} onPress={() => this.selectFillteration(4)} style={{ marginRight: 10, width: 20, height: 10, bottom: 5, left: 3 }} selectedColor='#437c1a'/>
                                 <Text>التقيم</Text>
-                            </View>
+                            </TouchableOpacity>
                         </View>
                         <List>
                             { this.renderListItems() }

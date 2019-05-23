@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native'
+import { View, Text, Platform } from 'react-native'
 import { Icon, Button } from 'native-base'
 import { createSwitchNavigator, createStackNavigator, createDrawerNavigator, DrawerItems } from 'react-navigation';
 import Login from '../components/Login'
@@ -36,6 +36,13 @@ import ForgetPassword from "../components/ForgetPassword";
 import AcceptOffer from "../components/AcceptOffer";
 import FinishOrder from "../components/FinishOrder";
 import DeleteOrder from "../components/DeleteOrder";
+import Plans from "../components/Plans";
+import Notes from "../components/Notes";
+import ConfirmCode from "../components/ConfirmCode";
+import RenewPassword from "../components/RenewPassword";
+import Chat from "../components/Chat";
+import Notification from "../components/Notification";
+import ChatConv from "../components/ChatConv";
 
 
 const CustomDrawerContentComponent = (props) => (<DrawerCustomization { ...props }/>);
@@ -59,8 +66,14 @@ const drawerNavigation = createDrawerNavigator({
    joinToProvider: JoinToVendors,
    newOrder: NewOrder,
    acceptOrder: AcceptOrder,
+   chat: Chat,
    commission: Commission,
    contactUs: ContactUs,
+   storage: Storage,
+   plans: Plans,
+   notes: Notes,
+   notification: Notification,
+   chatConv: ChatConv,
 
    logout: {
        screen: DrawerTabs,
@@ -72,13 +85,14 @@ const drawerNavigation = createDrawerNavigator({
 },
     {
         initialRouteName: 'home',
-        drawerPosition: 'right',
+        drawerPosition:  'right',
         contentComponent: CustomDrawerContentComponent,
         drawerOpenRoute: 'DrawerOpen',
         drawerCloseRoute: 'DrawerClose',
         gesturesEnabled: false,
         drawerToggleRoute: 'DrawerToggle'
-    });
+    }
+);
 
 const AppStack = createStackNavigator({
 	initScreen: {
@@ -222,12 +236,6 @@ const AppStack = createStackNavigator({
 			header: null
 		}
 	},
-	commission: {
-		screen: Commission,
-		navigationOptions: {
-			header: null
-		}
-	},
 	contactUs: {
 		screen: ContactUs,
 		navigationOptions: {
@@ -276,11 +284,60 @@ const AppStack = createStackNavigator({
 			header: null
 		}
 	},
+    commission: {
+        screen: Commission,
+        navigationOptions: {
+            header: null
+        }
+    },
+    plans: {
+        screen: Plans,
+        navigationOptions: {
+            header: null
+        }
+    },
+    notes: {
+        screen: Notes,
+        navigationOptions: {
+            header: null
+        }
+    },
+    confirmCode: {
+        screen: ConfirmCode,
+        navigationOptions: {
+            header: null
+        }
+    },
+    renewPassword: {
+        screen: RenewPassword,
+        navigationOptions: {
+            header: null
+        }
+    },
+    chatConv: {
+        screen: ChatConv,
+        navigationOptions: {
+            header: null
+        }
+    },
+    chat: {
+        screen: Chat,
+        navigationOptions: {
+            header: null
+        }
+    },
 }, {
     navigationOptions: {
         headerStyle: { backgroundColor: '#437c1a' },
 		backBehavior: 'none',
 		header: null
+    },
+
+    notification: {
+        screen: Notification,
+        navigationOptions: {
+            header: null
+        }
     }
 });
 

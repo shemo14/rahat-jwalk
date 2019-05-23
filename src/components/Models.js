@@ -13,6 +13,7 @@ class Models extends Component{
         super(props);
         this.state = {
             companyId: this.props.navigation.state.params.companyId,
+            companyImage: this.props.navigation.state.params.companyImage,
             type: this.props.navigation.state.params.type,
             models: []
         }
@@ -30,13 +31,13 @@ class Models extends Component{
         let navigateComponent = '';
         if (this.state.type === 1)
             navigateComponent = 'problems';
-        else if(this.state.type === 2 || this.state.type === 3)
+        else if(this.state.type === 2 || this.state.type === 3 || this.state.type === 4)
             navigateComponent = 'colors';
 
         return(
-            <TouchableOpacity style={styles.brandContainer} onPress={() => this.props.navigation.navigate( navigateComponent , {companyId: this.state.companyId, modelId: model.item.id, type: this.state.type})}>
+            <TouchableOpacity style={styles.brandContainer} onPress={() => this.props.navigation.navigate( navigateComponent , {companyId: this.state.companyId, modelId: model.item.id, type: this.state.type, companyImage: this.state.companyImage})}>
                 <Image source={{ uri: model.item.image }} style={{ height: 150, width: 150, flex: 2 }} resizeMode={'center'}/>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#62b6b8', textAlign: 'center', flex: 0.5, justifyContent: 'center' }}>{ model.item.title }</Text>
+                <Text style={{ fontWeight: 'bold', color: '#62b6b8', textAlign: 'center', justifyContent: 'center', flexWrap: "wrap" }}>{ model.item.title }</Text>
             </TouchableOpacity>
         );
     }
@@ -57,7 +58,7 @@ class Models extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>

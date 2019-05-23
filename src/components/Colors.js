@@ -11,6 +11,7 @@ class Colors extends Component{
         super(props);
         this.state = {
             companyId: this.props.navigation.state.params.companyId,
+            companyImage: this.props.navigation.state.params.companyImage,
             modelId: this.props.navigation.state.params.modelId,
             type: this.props.navigation.state.params.type,
             colors: []
@@ -28,12 +29,14 @@ class Colors extends Component{
     renderItem(color){
         let navigateComponent = '';
         if (this.state.type === 2)
-            navigateComponent = 'determinedLocation';
+            navigateComponent = 'storage';
         else if(this.state.type === 3)
             navigateComponent = 'accessory';
+        else if(this.state.type === 4)
+            navigateComponent = 'simCards';
 
         return(
-            <TouchableOpacity style={styles.brandContainer} onPress={() => this.props.navigation.navigate( navigateComponent , { params: { companyId: this.state.companyId, modelId: this.state.modelId, type: this.state.type, colorId: color.item.id } })}>
+            <TouchableOpacity style={styles.brandContainer} onPress={() => this.props.navigation.navigate( navigateComponent , { params: { companyId: this.state.companyId, modelId: this.state.modelId, type: this.state.type, colorId: color.item.id, companyImage: this.state.companyImage } })}>
                 <Image source={{ uri: color.item.image }} style={{ height: 150, width: 150, flex: 2 }} resizeMode={'center'}/>
             </TouchableOpacity>
         );
@@ -56,7 +59,7 @@ class Colors extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Button, Icon, Container, Header, Right, Body, Content, Left, Textarea, Form } from 'native-base';
-import { ImagePicker } from 'expo';
+import { ImagePicker, Permissions } from 'expo';
 
 
 class ProblemDesc extends Component{
@@ -22,7 +22,16 @@ class ProblemDesc extends Component{
         drawerLabel: ()=> null,
     });
 
+	askPermissionsAsync = async () => {
+		await Permissions.askAsync(Permissions.CAMERA);
+		await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+	};
+
     _pickImage = async (imageName) => {
+		this.askPermissionsAsync();
+
+		
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
             aspect: [4, 3],
@@ -48,7 +57,7 @@ class ProblemDesc extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>
@@ -68,7 +77,7 @@ class ProblemDesc extends Component{
                         {/*<Text style={{ fontSize: 18, textAlign: 'center', color: '#747474', marginBottom: 30, marginTop: 5 }}>سماعه</Text>*/}
 
                         <Form>
-                            <Textarea onChangeText={(desc) => this.setState({ desc })} rowSpan={5} placeholderTextColor={{ color: '#d4d4d4' }} style={{ backgroundColor: '#f4f4f4', borderColor: '#ededed', borderWidth: 1, borderRadius: 5 }} bordered placeholder="وصف المشكلة ..." />
+                            <Textarea onChangeText={(desc) => this.setState({ desc })} rowSpan={5} placeholderTextColor={{ color: '#d4d4d4' }} style={{ backgroundColor: '#f4f4f4', borderColor: '#ededed', borderWidth: 1, borderRadius: 5, writingDirection: 'rtl', textAlign: 'right' }} bordered placeholder="وصف المشكلة ..." />
 
                             <TouchableOpacity  style={{ flexDirection: 'row', backgroundColor: '#f4f4f4', borderWidth: 1, height: 35,borderColor: '#ededed', borderRadius: 5, alignItems: 'center', marginTop: 5 }} onPress={() => this._pickImage('image_1')}>
                                 <Icon type={'Entypo'} name={'upload'} style={{ color: '#4a862f', fontSize: 20, marginRight: 7, marginLeft: '38%' }}/>

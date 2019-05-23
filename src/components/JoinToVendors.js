@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, TouchableOpacity, Image } from 'react-native';
+import {View, Text, TouchableOpacity, Image, Platform} from 'react-native';
 import { Button, Icon, Container, Header, Right, Body, Content, Left, Item ,List, ListItem, CheckBox, Input, Form } from 'native-base';
-import CONST from "../consts";
-import axios from "axios/index";
-import { DoubleBounce } from 'react-native-loader';
 import {connect} from "react-redux";
-import Services from "./Services";
 import {Spinner} from "../common";
-import { ImagePicker } from 'expo';
+import {ImagePicker, Permissions} from 'expo';
 import { joinAsProvider } from '../actions/ProfileAction'
 
 
@@ -48,41 +44,41 @@ class JoinToVendors extends Component{
 					<List>
 						<ListItem onPress={() => this.state.mob_maintenance ? this.setState({ mob_maintenance: false }) : this.setState({ mob_maintenance: true })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
-								<Icon type={'Ionicons'} name={'ios-settings'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
-								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>صيانة</Text>
+								<Icon type={'Ionicons'} name={'ios-settings'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10, height: 22 }}/>
+								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4, height: 22 }}>صيانة</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_maintenance} onPress={() => this.state.mob_maintenance ? this.setState({ mob_maintenance: false }) : this.setState({ mob_maintenance: true })} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 4 }} checked={this.state.mob_maintenance} onPress={() => this.state.mob_maintenance ? this.setState({ mob_maintenance: false }) : this.setState({ mob_maintenance: true })} color="#437c1a"/>
 							</Right>
 						</ListItem>
 
 						<ListItem onPress={() => this.state.mob_seller ? this.setState({ mob_seller: false }) : this.setState({ mob_seller: true })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
-								<Icon type={'Entypo'} name={'mobile'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
-								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>بيع جولات</Text>
+								<Icon type={'Entypo'} name={'mobile'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10, height: 22 }}/>
+								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4, height: 22 }}>بيع جولات</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_seller} onPress={() => this.state.mob_seller ? this.setState({ mob_seller: false }) : this.setState({ mob_seller: true })} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 4 }} checked={this.state.mob_seller} onPress={() => this.state.mob_seller ? this.setState({ mob_seller: false }) : this.setState({ mob_seller: true })} color="#437c1a"/>
 							</Right>
 						</ListItem>
 
 						<ListItem onPress={() => this.state.accessories_seller ? this.setState({ accessories_seller: false }) : this.setState({ accessories_seller: true })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
-								<Icon type={'MaterialCommunityIcons'} name={'cellphone-screenshot'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
-								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>بيع اكسسوارات</Text>
+								<Icon type={'MaterialCommunityIcons'} name={'cellphone-screenshot'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10, height: 22 }}/>
+								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4, height: 22 }}>بيع اكسسوارات</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.accessories_seller} onPress={() => this.state.accessories_seller ? this.setState({ accessories_seller: false}) : this.setState({ accessories_seller: true })} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 4 }} checked={this.state.accessories_seller} onPress={() => this.state.accessories_seller ? this.setState({ accessories_seller: false}) : this.setState({ accessories_seller: true })} color="#437c1a"/>
 							</Right>
 						</ListItem>
 
 						<ListItem onPress={() => this.state.sim_card ? this.setState({ sim_card: false }) : this.setState({ sim_card: true }) } noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
-								<Icon type={'MaterialIcons'} name={'sim-card'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
-								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>شرائح بيانات</Text>
+								<Icon type={'MaterialIcons'} name={'sim-card'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10, height: 22 }}/>
+								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4, height: 22 }}>شرائح بيانات</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.sim_card} onPress={() => this.state.sim_card ? this.setState({ sim_card: false }) : this.setState({ sim_card: true }) } color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 4 }} checked={this.state.sim_card} onPress={() => this.state.sim_card ? this.setState({ sim_card: false }) : this.setState({ sim_card: true }) } color="#437c1a"/>
 							</Right>
 						</ListItem>
 					</List>
@@ -90,7 +86,16 @@ class JoinToVendors extends Component{
 			);
 	}
 
+	askPermissionsAsync = async () => {
+		await Permissions.askAsync(Permissions.CAMERA);
+		await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+	};
+
     _pickImage = async (type) => {
+    	this.askPermissionsAsync();
+
+
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
             aspect: [4, 3],
@@ -167,7 +172,7 @@ class JoinToVendors extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>
@@ -180,7 +185,7 @@ class JoinToVendors extends Component{
                     </Left>
                 </Header>
                 <Content style={{ padding: 10 }}>
-                    <View>
+                    <View style={{ marginLeft: Platform.OS === 'ios' ? 20 : 0 }}>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <TouchableOpacity onPress={() => this._pickImage('profile')} style={{ justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#ddd', borderRadius: 55, padding: 3, width: 90, height: 90 }}>
                                 {userImage != null ? <Image source={{ uri: userImage }} style={{ width: 100, height: 100, marginTop: 20, borderRadius: 80, borderWidth: 1, borderColor: '#f4f4f4', marginBottom: 20 }} /> : <Icon style={{ fontSize: 35, color: '#437c1a' }} type={'MaterialIcons'} name={'add-a-photo'}/> }
@@ -201,7 +206,7 @@ class JoinToVendors extends Component{
                                     marginLeft: 0
                                 }}>
                                     <Icon style={{color: '#277c19', fontSize: 20}} name={'user'} type={'FontAwesome'}/>
-                                    <Input autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} value={this.state.name} onChangeText={(name) => this.setState({name})} style={{ alignSelf: 'flex-end' , color: '#277c19', height: 35 }} placeholder='اسم المستخدم' />
+                                    <Input autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} value={this.state.name} onChangeText={(name) => this.setState({name})} style={{ alignSelf: 'flex-end' , color: '#277c19', height: 35, textAlign: 'right' }} placeholder='اسم المستخدم' />
                                 </Item>
 
                                 <Item style={{
@@ -215,7 +220,7 @@ class JoinToVendors extends Component{
                                     marginLeft: 0
                                 }}>
                                     <Icon style={{color: '#277c19', fontSize: 20}} name={'v-card'} type={'Entypo'}/>
-                                    <Input autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(idNumber) => this.setState({idNumber})} style={{ alignSelf: 'flex-end' , color: '#277c19', height: 35 }} placeholder='رقم الهوية' />
+                                    <Input autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(idNumber) => this.setState({idNumber})} style={{ alignSelf: 'flex-end' , color: '#277c19', height: 35, textAlign: 'right' }} placeholder='رقم الهوية' />
                                 </Item>
 
                                 <Item style={{
@@ -229,7 +234,7 @@ class JoinToVendors extends Component{
                                     marginLeft: 0
                                 }}>
                                     <Icon style={{color: '#277c19', fontSize: 20 }} name={'phone'} type={'FontAwesome'}/>
-                                    <Input autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(phone) => this.setState({phone})} style={{ alignSelf: 'flex-end', height: 35 }} placeholder='رقم الهاتف' value={this.state.phone}/>
+                                    <Input autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(phone) => this.setState({phone})} style={{ alignSelf: 'flex-end', height: 35, textAlign: 'right' }} placeholder='رقم الهاتف' value={this.state.phone}/>
                                 </Item>
 
                                 <Item onPress={() => this._pickImage('ID')} style={{
@@ -243,7 +248,7 @@ class JoinToVendors extends Component{
                                     marginLeft: 0
                                 }}>
                                     <Icon style={{color: '#277c19', fontSize: 20}} name={'v-card'} type={'Entypo'}/>
-                                    <Input disabled autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(email) => this.setState({email})} style={{ alignSelf: 'flex-end', height: 35 }} placeholder='صوره الهوية' value={this.state.email}/>
+                                    <Input disabled autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(email) => this.setState({email})} style={{ alignSelf: 'flex-end', height: 35, textAlign: 'right' }} placeholder='صوره الهوية' value={this.state.email}/>
                                     <Icon style={{color: '#277c19', fontSize: 20 }} type={'MaterialIcons'} name={'add-a-photo'}/>
                                 </Item>
 
@@ -258,7 +263,7 @@ class JoinToVendors extends Component{
                                     marginLeft: 0
                                 }}>
                                     <Icon style={{color: '#277c19', fontSize: 20}} name={'graduation-cap'} type={'FontAwesome'}/>
-                                    <Input disabled autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(email) => this.setState({email})} style={{ alignSelf: 'flex-end', height: 35 }} placeholder='صوره دورة الصيانة' value={this.state.email}/>
+                                    <Input disabled autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(email) => this.setState({email})} style={{ alignSelf: 'flex-end', height: 35, textAlign: 'right' }} placeholder='صوره دورة الصيانة' value={this.state.email}/>
                                     <Icon style={{color: '#277c19', fontSize: 20 }} type={'MaterialIcons'} name={'add-a-photo'}/>
                                 </Item>
 
@@ -273,7 +278,7 @@ class JoinToVendors extends Component{
                                     marginLeft: 0
                                 }}>
                                     <Icon style={{color: '#277c19', fontSize: 20}} name={'shop'} type={'Entypo'}/>
-                                    <Input disabled autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(email) => this.setState({email})} style={{ alignSelf: 'flex-end', height: 35 }} placeholder='صوره السجل التجاري' value={this.state.email}/>
+                                    <Input disabled autoCapitalize='none' placeholderStyle={{ textAlign: 'right' }} onChangeText={(email) => this.setState({email})} style={{ alignSelf: 'flex-end', height: 35, textAlign: 'right' }} placeholder='صوره السجل التجاري' value={this.state.email}/>
                                     <Icon style={{color: '#277c19', fontSize: 20 }} type={'MaterialIcons'} name={'add-a-photo'}/>
                                 </Item>
                             </Form>

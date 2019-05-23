@@ -48,7 +48,7 @@ class VendorDetails extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>
@@ -66,7 +66,7 @@ class VendorDetails extends Component{
                             <TouchableOpacity onPress={() => Communications.phonecall(this.state.vendorData.provider_phone, false)} style={{ width: 50, height: 50, backgroundColor: '#f4f3f3', borderWidth: 1, borderColor: '#f0f0f0', borderRadius: 40, alignItems: 'center', justifyContent: 'center', marginTop: 75, marginHorizontal: 30 }}>
                                 <Icon style={{ color: '#437c1a' }} type={'FontAwesome'} name={'volume-control-phone'}/>
                             </TouchableOpacity>
-                            <Image source={{ uri: this.state.vendorData.provider_image }} style={{ height: 100, width: 100, marginTop: 50, borderRadius: 80, borderWidth: 1, borderColor: '#f4f4f4' }}/>
+                            <Image source={{ uri: this.state.vendorData.provider_image }} style={{ height: 100, width: 100, marginTop: 50, borderRadius: 50, borderWidth: 1, borderColor: '#f4f4f4' }}/>
                             <TouchableOpacity onPress={() => Communications.email(this.state.vendorData.provider_email, null, null, null, null)} style={{ width: 50, height: 50, backgroundColor: '#f4f3f3', borderWidth: 1, borderColor: '#f0f0f0', borderRadius: 40, alignItems: 'center', justifyContent: 'center', marginTop: 75, marginHorizontal: 30 }}>
                                 <Icon style={{ color: '#437c1a' }} type={'MaterialIcons'} name={'email'}/>
                             </TouchableOpacity>
@@ -75,6 +75,10 @@ class VendorDetails extends Component{
                             <View style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#f6f6f6', borderRadius: 5, height: 40, width: 200, alignItems: 'center', justifyContent: 'center', marginTop: 5 }}>
                                 <Text style={{ color: '#989899', fontSize: 20 }}>{ this.state.vendorData.provider_name }</Text>
                             </View>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('chatConv', { orderId: this.state.orderId, vendorData: this.state.vendorData })} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 5, borderBottomWidth: 1, borderColor: '#74a66e' }}>
+                                <Icon name={'ios-chatbubbles'} style={{ color: '#74a66e' }} type={"Ionicons"} />
+                                <Text style={{ color: '#74a66e', fontSize: 18, marginHorizontal: 5 }}>ابدأ المحادثة</Text>
+                            </TouchableOpacity>
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 5, marginBottom: 25 }}>
                                 <Icon type={'FontAwesome'} name={'star'} style={{ color: this.state.rate >= 1 ? '#eebc47' : '#6a6a6a', fontSize: 20 }}/>
                                 <Icon type={'FontAwesome'} name={'star'} style={{ color: this.state.rate >= 2 ? '#eebc47' : '#6a6a6a', fontSize: 20 }}/>
@@ -112,13 +116,14 @@ class VendorDetails extends Component{
                     </View>
                     <Modal isVisible={this.state.visibleModal === 1} onBackdropPress={() => this.setState({ visibleModal: null })}>
                         <View style={{ backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', borderRadius: 10, height: 300, borderColor: 'rgba(0, 0, 0, 0.1)', }}>
-                            <Header style={{ backgroundColor: '#437c1a', alignItems: 'center', width: '100%', height: 40, top: -8, borderTopRightRadius: 10, borderTopLeftRadius: 10 }}>
-                                <Body style={{ flex: 1, alignItems: 'center' }}>
+                            <Header style={{ backgroundColor: '#437c1a', alignItems: 'center', width: '100%', height: 50, top: -8, borderTopRightRadius: 10, borderTopLeftRadius: 10, paddingTop: 0 }}>
+                                <Body style={{ flex: 1, alignItems: 'center', height: 40, paddingTop: 5 }}>
                                     <Text style={{ textAlign: 'center', color: '#fff', fontSize: 20 }}>قيمني</Text>
                                 </Body>
                             </Header>
+
                             <View style={{ alignItems: 'center' }}>
-                                <Image source={{ uri: this.state.vendorData.provider_image }} style={{ height: 90, width: 90, borderRadius: 80, borderWidth: 1, borderColor: '#f4f4f4', marginTop: 10 }}/>
+                                <Image source={{ uri: this.state.vendorData.provider_image }} style={{ height: 90, width: 90, borderRadius: 50, borderWidth: 1, borderColor: '#f4f4f4', marginTop: 10 }}/>
                                 <View style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#f6f6f6', borderRadius: 5, height: 40, width: 200, alignItems: 'center', justifyContent: 'center', marginTop: 5, marginBottom: 10 }}>
                                     <Text style={{ color: '#989899', fontSize: 20 }}>{ this.state.vendorData.provider_name }</Text>
                                 </View>

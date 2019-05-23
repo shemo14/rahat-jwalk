@@ -7,9 +7,8 @@ import { DoubleBounce } from 'react-native-loader';
 import {connect} from "react-redux";
 import Services from "./Services";
 import {Spinner} from "../common";
-import { ImagePicker } from 'expo';
+import {ImagePicker, Permissions, MapView, Location} from 'expo';
 import Modal from "react-native-modal"
-import { MapView, Location } from 'expo'
 import { updateProfile } from '../actions/ProfileAction'
 
 
@@ -22,6 +21,7 @@ class Profile extends Component{
             name: this.props.profile.name,
             city: this.props.profile.city,
             email: this.props.profile.email,
+            howToKnowUs: this.props.profile.howToKnowUs,
             phone: this.props.profile.phone,
             password: null,
             confirmPassword: null,
@@ -51,7 +51,7 @@ class Profile extends Component{
     renderProviderServices(){
         if (this.props.profile.provider == 1){
             return (
-				<View>
+				<View style={{ marginLeft: 22 }}>
 					<View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
 						<Icon type={'Entypo'} name={'tools'} style={{ color: '#82b37d', marginRight: 5, top: 3 }}/>
 						<Text style={{ color: '#82b37d', textAlign: 'center' }}>الخدمات التي ترغب في تقديمها</Text>
@@ -60,41 +60,41 @@ class Profile extends Component{
 					<List>
 						<ListItem onPress={() => this.state.mob_maintenance ? this.setState({ mob_maintenance: false }) : this.setState({ mob_maintenance: true })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
-								<Icon type={'Ionicons'} name={'ios-settings'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
-								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>صيانة</Text>
+								<Icon type={'Ionicons'} name={'ios-settings'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10, height: 22 }}/>
+								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4, height: 22 }}>صيانة</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_maintenance} onPress={() => this.state.mob_maintenance ? this.setState({ mob_maintenance: false }) : this.setState({ mob_maintenance: true })} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 4 }} checked={this.state.mob_maintenance} onPress={() => this.state.mob_maintenance ? this.setState({ mob_maintenance: false }) : this.setState({ mob_maintenance: true })} color="#437c1a"/>
 							</Right>
 						</ListItem>
 
 						<ListItem onPress={() => this.state.mob_seller ? this.setState({ mob_seller: false }) : this.setState({ mob_seller: true })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
-								<Icon type={'Entypo'} name={'mobile'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
-								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>بيع جولات</Text>
+								<Icon type={'Entypo'} name={'mobile'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10, height: 22 }}/>
+								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4, height: 22 }}>بيع جولات</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.mob_seller } onPress={() => this.state.mob_seller ? this.setState({ mob_seller: false }) : this.setState({ mob_seller: true })} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 4 }} checked={this.state.mob_seller } onPress={() => this.state.mob_seller ? this.setState({ mob_seller: false }) : this.setState({ mob_seller: true })} color="#437c1a"/>
 							</Right>
 						</ListItem>
 
 						<ListItem onPress={() => this.state.accessories_seller ? this.setState({ accessories_seller: false }) : this.setState({ accessories_seller: true })} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
-								<Icon type={'MaterialCommunityIcons'} name={'cellphone-screenshot'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
-								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>بيع اكسسوارات</Text>
+								<Icon type={'MaterialCommunityIcons'} name={'cellphone-screenshot'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10, height: 22 }}/>
+								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4, height: 22 }}>بيع اكسسوارات</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.accessories_seller} onPress={() => this.state.accessories_seller ? this.setState({ accessories_seller: false }) : this.setState({ accessories_seller: true })} color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 4 }} checked={this.state.accessories_seller} onPress={() => this.state.accessories_seller ? this.setState({ accessories_seller: false }) : this.setState({ accessories_seller: true })} color="#437c1a"/>
 							</Right>
 						</ListItem>
 
 						<ListItem onPress={() => this.state.sim_card ? this.setState({ sim_card: false }) : this.setState({ sim_card: true }) } noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
 							<Left style={{ flex: 1 }}>
-								<Icon type={'MaterialIcons'} name={'sim-card'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
-								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>شرائح بيانات</Text>
+								<Icon type={'MaterialIcons'} name={'sim-card'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10, height: 22 }}/>
+								<Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4, height: 22 }}>شرائح بيانات</Text>
 							</Left>
 							<Right style={{ flex: 1 }}>
-								<CheckBox style={{ borderRadius: 3, paddingRight: 2 }} checked={this.state.sim_card} onPress={() => this.state.sim_card ? this.setState({ sim_card: false}) : this.setState({ sim_card: true }) } color="#437c1a"/>
+								<CheckBox style={{ borderRadius: 3, paddingRight: 4 }} checked={this.state.sim_card} onPress={() => this.state.sim_card ? this.setState({ sim_card: false}) : this.setState({ sim_card: true }) } color="#437c1a"/>
 							</Right>
 						</ListItem>
 					</List>
@@ -103,7 +103,15 @@ class Profile extends Component{
         }
     }
 
+	askPermissionsAsync = async () => {
+		await Permissions.askAsync(Permissions.CAMERA);
+		await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+	};
+
 	_pickImage = async () => {
+		this.askPermissionsAsync();
+
 		let result = await ImagePicker.launchImageLibraryAsync({
 			allowsEditing: true,
 			aspect: [4, 3],
@@ -122,14 +130,14 @@ class Profile extends Component{
 
 		if (this.state.name === '' || this.state.phone === '' || this.state.city === '' ){
 			return (
-				<Button block disabled style={{marginTop: 20, marginBottom: 20, width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} light>
+				<Button block disabled style={{marginTop: 20, marginBottom: 20, width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', marginLeft: 22 }} light>
 					<Text style={{color: '#999', fontSize: 17, textAlign: 'center' }}>تعديل</Text>
 				</Button>
 			);
 		}
 
 		return (
-			<Button block style={{marginTop: 20, marginBottom: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center'}} onPress={() => { this.signUp()  }}>
+			<Button block style={{marginTop: 20, marginBottom: 20, backgroundColor: '#eebc47', width: '100%', height: 40 ,alignSelf: 'center', borderRadius: 0, justifyContent: 'center', marginLeft: 22}} onPress={() => { this.signUp()  }}>
 				<Text style={{color: '#fff', fontSize: 17, textAlign: 'center' }}>تعديل</Text>
 			</Button>
 		);
@@ -295,6 +303,7 @@ class Profile extends Component{
 			name: this.state.name,
 			phone: this.state.phone === this.props.profile.phone ? null : this.state.phone,
 			password: this.state.password,
+			howToKnowUs: this.state.howToKnowUs,
 			city: this.state.city,
 			lat: this.state.lat,
 			lng: this.state.lng,
@@ -317,6 +326,7 @@ class Profile extends Component{
 	}
 
     render(){
+		console.log(this.state.howToKnowUs);
         const data = this.props.profile;
 		let { userImage } = this.state;
 
@@ -327,7 +337,7 @@ class Profile extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>
@@ -341,43 +351,48 @@ class Profile extends Component{
                 </Header>
                 <Content style={{ padding: 10 }}>
                     <View>
-						<TouchableOpacity onPress={this._pickImage} style={{ justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#ddd', borderRadius: 55, padding: 3, width: 100, height: 100, alignSelf: 'center', marginBottom: 20 }}>
-							{userImage != null ? <Image source={{ uri: userImage }} style={{ width: 100, height: 100, marginTop: 20, borderRadius: 80, borderWidth: 1, borderColor: '#f4f4f4', marginBottom: 20 }} /> : <Image onPress={this._pickImage} source={{ uri: data.image }} style={{ height: 100, width: 100, alignSelf: 'center' ,marginTop: 20, borderRadius: 80, borderWidth: 1, borderColor: '#f4f4f4', marginBottom: 20 }}/> }
+						<TouchableOpacity onPress={this._pickImage} style={{ justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#ddd', borderRadius: 55, padding: 3, width:  110, height: 110, alignSelf: 'center', marginBottom: 20 }}>
+							{userImage != null ? <Image source={{ uri: userImage }} style={{ width: 100, height: 100, marginTop: 20, borderRadius: 50, borderWidth: 1, borderColor: '#f4f4f4', marginBottom: 20 }} /> : <Image onPress={this._pickImage} source={{ uri: data.image }} style={{ height: 100, width: 100, alignSelf: 'center' ,marginTop: 20, borderRadius: 50, borderWidth: 1, borderColor: '#f4f4f4', marginBottom: 20 }}/> }
 						</TouchableOpacity>
 
                         <View>
                             <Form>
                                 <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                                    <Text style={{ flex: 2 }}>الاسم :</Text>
+                                    <Text style={{ flex: 2, textAlign: 'center' }}>الاسم :</Text>
                                     <Input onChangeText={(name) => this.setState({name})} value={this.state.name} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
                                 </View>
 
                                 <View style={{ flexDirection: 'row', marginBottom: 10 }} >
-                                    <Text style={{ flex: 2 }}>المدينة :</Text>
+                                    <Text style={{ flex: 2, textAlign: 'center'  }}>المدينة :</Text>
 									<TouchableOpacity style={{ flex: 4 }} onPress={() => this.setState({ mapModal: 1 })}>
 										<Input disabled onChangeText={(city) => this.setState({city})} value={this.state.city} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, width: '100%' }}/>
 									</TouchableOpacity>
                                 </View>
 
 								<View style={{ flexDirection: 'row', marginBottom: 10 }}>
-									<Text style={{ flex: 2 }}>الهاتف :</Text>
+									<Text style={{ flex: 2, textAlign: 'center'  }}>الهاتف :</Text>
 									<Input onChangeText={(phone) => this.setState({phone})} value={this.state.phone} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
 								</View>
 
                                 <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                                    <Text style={{ flex: 2 }}>الايميل :</Text>
+                                    <Text style={{ flex: 2, textAlign: 'center'  }}>الايميل :</Text>
                                     <Input onChangeText={(email) => this.setState({email})} value={this.state.email} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
                                 </View>
 
                                 <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                                    <Text style={{ flex: 2 }}>كلمة المرور :</Text>
+                                    <Text style={{ flex: 2, textAlign: 'center'  }}>كلمة المرور :</Text>
                                     <Input secureTextEntry onChangeText={(password) => this.setState({password})} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
                                 </View>
 
                                 <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                                    <Text style={{ flex: 2 }}>تأكيد كلمة المرور :</Text>
+                                    <Text style={{ flex: 2 , textAlign: 'center' }}>تأكيد كلمة المرور :</Text>
                                     <Input secureTextEntry onChangeText={(confirmPassword) => this.setState({confirmPassword})} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
                                 </View>
+
+								<View style={{ flexDirection: 'row', marginBottom: 10 }}>
+									<Text style={{ flex: 2 , textAlign: 'center' }}>كيف عرفت عنا :</Text>
+									<Input value={this.state.howToKnowUs} onChangeText={(howToKnowUs) => this.setState({howToKnowUs})} style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#eeeeef', textAlign: 'center', height: 35, flex: 4 }}/>
+								</View>
                             </Form>
 
                             { this.renderProviderServices() }

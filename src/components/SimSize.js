@@ -47,7 +47,7 @@ class SimSize extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>
@@ -71,11 +71,11 @@ class SimSize extends Component{
                                 this.state.sizes.map((size, i) => (
                                     <ListItem onPress={() => this.setInstallation(size.id)} key={i} noBorder style={{ flex: 1, marginLeft: 0, backgroundColor: '#f7f7f9', borderColor: '#f1f1f2', borderWidth: 1, borderRadius: 5, margin: 5, height: 40 }}>
                                         <Left style={{ flex: 1 }}>
-                                            <Icon type={'FontAwesome'} name={'database'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10 }}/>
-                                            <Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4 }}>{ size.title }</Text>
+                                            <Icon type={'FontAwesome'} name={'database'} style={{ color: '#478947', fontSize: 20, marginRight: 15, marginLeft: 10, height: 22 }}/>
+                                            <Text style={{ color: '#69696a', fontSize: 16, marginLeft: 4, marginRight: 4, height: 22 }}>{ size.title }</Text>
                                         </Left>
                                         <Right style={{ flex: 1 }}>
-                                            <CheckBox style={{ borderRadius: 3, paddingRight: 1 }} checked={this.state.checked === size.id ? true : false} onPress={() => this.setInstallation(size.id)} color="#437c1a"/>
+                                            <CheckBox style={{ borderRadius: 3, paddingRight: 4 }} checked={this.state.checked === size.id ? true : false} onPress={() => this.setInstallation(size.id)} color="#437c1a"/>
                                         </Right>
                                     </ListItem>
                                 ))

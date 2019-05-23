@@ -31,7 +31,8 @@ class Login extends Component{
         const err = this.validate();
         if (!err){
             this.setState({ loader: true });
-            const {phone, password, token} = this.state;
+            const {phone, password } = this.state;
+            const token = '111111';
             this.props.userLogin({ phone, password, token });
         }
 
@@ -67,13 +68,15 @@ class Login extends Component{
 			finalStatus = status;
 		}
 
+
 		if (finalStatus !== 'granted') {
 			return;
 		}
 
 		let token = await Notifications.getExpoPushTokenAsync();
-		this.setState({ token, userId: null })
-		alert(token);
+		this.setState({ token, userId: null });
+
+		// alert(token);
 
 	}
 

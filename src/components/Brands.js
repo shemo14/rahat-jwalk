@@ -28,7 +28,7 @@ class Brands extends Component{
 
     renderItem(brand){
         return(
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('models', { companyId: brand.item.id, type: this.state.type })} style={styles.brandContainer}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('models', { companyId: brand.item.id, type: this.state.type, companyImage: brand.item.image })} style={styles.brandContainer}>
                 <Image source={{ uri: brand.item.image }} style={{ height: 150, width: 150, flex: 2 }} resizeMode={'center'}/>
                 <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#62b6b8', textAlign: 'center', flex: 0.5, justifyContent: 'center' }}>{ brand.item.title }</Text>
             </TouchableOpacity>
@@ -51,7 +51,7 @@ class Brands extends Component{
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
                     <Right style={{ flex: 0 }}>
                         <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                            <Icon name='menu' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
+                            <Icon name='menu' type='Entypo' style={{ color: '#fff', fontSize: 30, marginTop: 8, left: -10 }} />
                         </Button>
                     </Right>
                     <Body style={{ width: '100%', alignItems: 'center', alignSelf: 'center' }}>
