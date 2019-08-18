@@ -9,7 +9,7 @@
       "ios",
       "android"
     ],
-    "version": "2.1.0",
+    "version": "2.6.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -25,13 +25,22 @@
     ],
     "ios": {
       "bundleIdentifier": "com.rahat.jawalak",
-      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "App need this permission to update profile photo.",
+        "NSLocationWhenInUseUsageDescription": "app need location to show the nearest providers of you.",
+        "NSLocationAlwaysUsageDescription": "app need location to show the nearest providers of you.",
+        "NSMotionUsageDescription": "app need location to show the nearest providers of you.",
+        "NSPhotoLibraryAddUsageDescription": "App need this permission to update profile photo.",
+        "NSPhotoLibraryUsageDescription": "App need this permission to update profile photo."
+      },
+      "supportsTablet": false,
       "config": {
         "googleMapsApiKey": "AIzaSyDDGCkEv3jHUzSA1FVI26h_OadsG297Pe8"
       }
     },
     "android": {
-      "package": "com.raht.jawalak",
+      "package": "com.rahat.jawalak",
+      "versionCode": 4,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDDGCkEv3jHUzSA1FVI26h_OadsG297Pe8"

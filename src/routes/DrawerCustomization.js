@@ -5,7 +5,7 @@ import { DrawerItems } from 'react-navigation';
 import {connect} from "react-redux";
 import axios from 'axios';
 import CONST from "../consts";
-
+import { logout } from '../actions'
 
 
 
@@ -15,32 +15,55 @@ class DrawerCustomization extends Component {
         this.state={
             user: [],
             lang: 'en',
+            payment: false,
 			site_social: []
         }
-
-        console.log('this fuck cons');
     }
 
-	async logout(){
-		axios.post( CONST.url + 'logout', { user_id: this.props.user.id })
-			.catch(error => console.warn(error.data));
-
-		this.props.navigation.navigate('login');
-		AsyncStorage.clear();
+	userLogout(){
+		this.props.logout({ userId: this.props.user.id });
+        this.props.navigation.navigate('login');
     }
-
 
     componentWillMount() {
+        console.log(this.props.user);
+
         axios.get(CONST.url + 'contact_info').then(response => {
-            this.setState({ site_social: response.data.data.site_social })
+            this.setState({ site_social: response.data.data.site_social, payment: response.data.payment })
         })
 	}
+
+	renderDrawerTabs(){
+        let { user } = this.props;
+        if (user === null && this.props.auth !== null)
+            user = this.props.auth.data;
+        else if (this.props.auth === null){
+            user = {
+                name: 'زائر',
+                image: 'http://rahat.aait-sa.com/dashboard/uploads/users/default.png'
+            }
+        }
+
+        if (this.props.auth !== null && user.provider == 1 )
+            return this.state.payment ? this.props.items.filter((item) => item.routeName !== 'joinToProvider') : this.props.items.filter((item) => item.routeName !== 'joinToProvider' && item.routeName !== 'commission' && item.routeName !== 'signIn');
+        else if(this.props.auth === null)
+            return this.props.items.filter((item) => item.routeName !== 'newOrders' && item.routeName !== 'commission' && item.routeName !== 'currentOrders' && item.routeName !== 'joinToProvider' && item.routeName !== 'chat' && item.routeName !== 'logout' && item.routeName !== 'finishedOrders');
+        else
+            return this.props.items.filter((item) => item.routeName !== 'newOrders' && item.routeName !== 'commission'  && item.routeName !== 'signIn');
+    }
+
 
 
 	render(){
         let { user } = this.props;
-        if (user === null)
+        if (user === null && this.props.auth !== null)
             user = this.props.auth.data;
+        else if (this.props.auth === null){
+            user = {
+                name: 'زائر',
+                image: 'http://rahat.aait-sa.com/dashboard/uploads/users/default.png'
+            }
+        }
 
         return(
             <Container style={{ overflow: 'visible' }}>
@@ -49,7 +72,7 @@ class DrawerCustomization extends Component {
                         <Body style={{ alignItems: 'center' }}>
                             <View style={styles.profileContainer}>
                                 <Image style={styles.profileImage} source={{ uri: user.image }} />
-                                <TouchableOpacity style={styles.authContainer} onPress={() => this.props.navigation.navigate('profile')}>
+                                <TouchableOpacity style={styles.authContainer} onPress={() => this.props.navigation.navigate( this.props.auth == null ? 'login' : 'profile')}>
                                     <Text onPress={() => this.props.navigation.navigate('profile')} style={styles.usernameText}>{ user.name }</Text>
                                 </TouchableOpacity>
                             </View>
@@ -60,13 +83,16 @@ class DrawerCustomization extends Component {
                     <DrawerItems {...this.props} labelStyle={{color: '#9c9c9c', margin: 10, right: 15}} onItemPress={
                             (route, focused) => {
                                 if (route.route.key === 'logout') {
-                                    this.logout()
+                                    this.userLogout()
+                                } else if (route.route.key === 'signIn') {
+                                    this.props.navigation.navigate('login');
                                 }else {
+
                                     this.props.navigation.navigate(route.route.key);
                                 }
                             }
                         }
-						items={this.props.auth !== null && user.provider == 1 ? this.props.items.filter((item) => item.routeName !== 'joinToProvider') : this.props.items.filter((item) => item.routeName !== 'newOrders' && item.routeName !== 'commission')  }
+						items={ this.renderDrawerTabs() }
                     />
                     <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'center', flex: 1 }}>
                         {
@@ -160,4 +186,4 @@ const mapStateToProps = ({ auth, profile }) => {
     };
 };
 
-export default connect(mapStateToProps)(DrawerCustomization);
+export default connect(mapStateToProps, { logout })(DrawerCustomization);

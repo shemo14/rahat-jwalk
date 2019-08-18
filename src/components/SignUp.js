@@ -359,7 +359,7 @@ class SignUp extends Component{
             <Container style={{ backgroundColor: '#fff' }}>
                 <Content contentContainerStyle={{flexGrow: 1}}>
                     <View style={{justifyContent: 'center', alignItems: 'center' }}>
-                        <Image resizeMode={'center'} style={{width: 100, height: 130, marginTop: 30}}
+                        <Image resizeMode={'contain'} style={{width: 150, height: 150, marginTop: 30}}
                                source={require('../../assets/images/logo.png')}/>
                     </View>
                     <Form>

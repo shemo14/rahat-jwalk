@@ -162,30 +162,33 @@ class DeterminedLocation extends Component{
 
     onLocationSelected() {
         this.setState({ loader: true });
-        axios.post(CONST.url + 'store/order',
-            {
-                user_id: this.props.auth.data.id,
-                company_id: this.state.params.companyId,
-                type: this.state.params.type,
-                lat: this.state.selectedLocation.latitude,
-                lng: this.state.selectedLocation.longitude,
-                city: this.state.selectedLocation.name,
-                problem_desc: this.state.params.desc,
-                image1: this.state.params.image1,
-                image2: this.state.params.image2,
-                service_id: this.state.params.serviceId,
-                notes: this.state.params.notes,
-                color_id: this.state.params.colorId,
-                accessory_id: this.state.accessoryList !== undefined ? this.state.accessoryList.toString() : null,
-                model_id: this.state.params.modelId,
-                problem_id: this.state.params.problemList !== undefined ? this.state.params.problemList.toString() : null,
-            }
-        ).then(response => {
-            this.setState({ loader: false });
-            // this.props.navigation.navigate('confirmOrder');
-        }).catch(() => this.setState({ loader: false }))
+        if (this.props.auth !== null){
+            axios.post(CONST.url + 'store/order',
+                {
+                    user_id: this.props.auth.data.id,
+                    company_id: this.state.params.companyId,
+                    type: this.state.params.type,
+                    lat: this.state.selectedLocation.latitude,
+                    lng: this.state.selectedLocation.longitude,
+                    city: this.state.selectedLocation.name,
+                    problem_desc: this.state.params.desc,
+                    image1: this.state.params.image1,
+                    image2: this.state.params.image2,
+                    service_id: this.state.params.serviceId,
+                    notes: this.state.params.notes,
+                    color_id: this.state.params.colorId,
+                    accessory_id: this.state.accessoryList !== undefined ? this.state.accessoryList.toString() : null,
+                    model_id: this.state.params.modelId,
+                    problem_id: this.state.params.problemList !== undefined ? this.state.params.problemList.toString() : null,
+                }
+            ).then(response => {
+                this.setState({ loader: false });
+                // this.props.navigation.navigate('confirmOrder');
+            }).catch(() => this.setState({ loader: false }));
 
-        this.props.navigation.navigate('confirmOrder');
+            this.props.navigation.navigate('confirmOrder');
+        } else
+            this.props.navigation.navigate('login')
     }
 
     renderLoader(){

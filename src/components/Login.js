@@ -20,6 +20,7 @@ class Login extends Component{
           showToast: false,
           userId: null
         };
+
     }
 
 
@@ -83,7 +84,6 @@ class Login extends Component{
 	componentWillReceiveProps(newProps){
         if (newProps.auth !== null && newProps.auth.key === "1"){
 
-
             if (this.state.userId === null){
 				this.setState({ userId: newProps.auth.data.id });
 				this.props.profile(newProps.auth.data.id);
@@ -92,7 +92,7 @@ class Login extends Component{
 			this.props.navigation.navigate('drawerNavigation');
         }
         
-        if (this.props.profile !== null) {
+        if (newProps.auth !== null) {
 			Toast.show({
 				text: newProps.auth.massage,
 				type: newProps.auth.key === "1" ? "success" : "danger",
@@ -148,8 +148,7 @@ class Login extends Component{
                 <Content contentContainerStyle={{flexGrow: 1}}>
                     <KeyboardAvoidingView behavior="position">
                         <View style={{justifyContent: 'center', alignItems: 'center', height: 220, paddingTop: 70}}>
-                            <Image resizeMode={'stretch'} style={{width: 100, height: 100}}
-                                   source={require('../../assets/images/logo.png')}/>
+                            <Image resizeMode={'contain'} style={{width: 150, height: 150}} source={require('../../assets/images/logo.png')}/>
                         </View>
                         <Form>
                             <View style={{flex: 2, padding: 30}}>
@@ -183,10 +182,14 @@ class Login extends Component{
                                     textAlign: 'center',
                                     marginTop: 2
                                 }}>{this.state.passwordError}</Text>
-                                <View style={{justifyContent: 'center', alignItems: 'center', margin: 20}}>
+                                <View style={{justifyContent: 'center', alignItems: 'center', margin: 5}}>
                                     <Text onPress={() => this.props.navigation.navigate('forgetPassword')} style={{ color: '#8c8c8c', marginBottom: 10, textDecorationLine: "underline" }}>هل نسيت كلمة المرور ؟</Text>
                                     <TouchableOpacity onPress={() => this.props.navigation.navigate('signUp')}>
-                                        <Text style={{ color: '#8c8c8c', textDecorationLine: "underline" }}> لا تمتلك حساب ؟</Text>
+                                        <Text style={{ color: '#8c8c8c', textDecorationLine: "underline", marginBottom: 10 }}> لا تمتلك حساب ؟</Text>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('drawerNavigation')}>
+                                        <Text style={{ color: '#8c8c8c', textDecorationLine: "underline" }}> الدخول كزائر</Text>
                                     </TouchableOpacity>
                                 </View>
 

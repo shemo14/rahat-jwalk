@@ -8,8 +8,8 @@ export default (state = INITIAL_STATE, action) => {
 			return ({...state, loading: false, user: action.error });
         case ('login_success') :
             return ({...state, loading: false, user: action.data });
-		case ('user_logout') :
-			return ({...state, user: null});
+        case ('logout'):
+            return ({ ...state, user: null });
         default :
             return state;
     }

@@ -140,8 +140,8 @@ class FinishedOrder extends Component{
                     </Left>
                 </Header>
                 { this.renderLoader() }
-                <Content style={{ padding: 10 }}>
-                    <View>
+                <Content>
+                    <View style={{ padding: 10 }}>
                         <List>
                             { this.renderListItems() }
                         </List>

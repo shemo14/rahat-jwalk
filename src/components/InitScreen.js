@@ -12,7 +12,9 @@ class InitScreen extends Component{
 
     componentWillMount = async () => {
         // AsyncStorage.clear();
-        if (this.props.user !== null && this.props.auth.key !== '0')
+        console.log('init screen...', this.props.auth);
+
+        if (this.props.auth !== null)
             this.props.navigation.navigate('drawerNavigation');
         else
             this.props.navigation.navigate('login');

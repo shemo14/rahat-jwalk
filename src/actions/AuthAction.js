@@ -45,3 +45,14 @@ const loginSuccess = (dispatch, data) => {
 const loginFailed = (dispatch, error) => {
     dispatch({type: 'login_failed', error});
 };
+
+export const logout = (data) => {
+    return (dispatch) => {
+        axios.post( CONST.url + 'logout', { user_id: data.userId })
+            .then(() => {
+                dispatch({ type: 'logout' });
+                AsyncStorage.clear();
+            })
+            .catch(error => console.warn(error.data));
+    }
+}

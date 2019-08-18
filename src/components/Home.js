@@ -108,12 +108,13 @@ class Home extends Component{
 		let token = await Notifications.getExpoPushTokenAsync();
 		this.setState({ token })
 
-		axios.post(CONST.url + 'show/map/data', { user_id: this.props.auth.data.id, lat: this.state.userLocation.latitude, lng: this.state.userLocation.longitude }).then(response => {
-			this.setState({ binsLocations: response.data.data.other_data });
-		});
+        if (this.props.auth !== null){
+            axios.post(CONST.url + 'show/map/data', { user_id: this.props.auth.data.id, lat: this.state.userLocation.latitude, lng: this.state.userLocation.longitude }).then(response => {
+                this.setState({ binsLocations: response.data.data.other_data });
+            });
+        } else
+            this.setState({ binsLocations: [] });
 
-
-		console.log(this.props.user, this.props.auth)
 	}
 
 
@@ -125,7 +126,7 @@ class Home extends Component{
     }
 
 	handleNotification = (notification) => {
-		console.log(notification);
+	//	console.log(notification);
 
 		if (notification && notification.origin !== 'received') {
 			const { data } = notification;
@@ -171,7 +172,7 @@ class Home extends Component{
                         <Text style={{ color: '#fff', textAlign: 'center', marginRight: 25, fontSize: 18 }}>الرئيسية</Text>
                     </Body>
                     <Right style={{ flex: 0 }}>
-                        <Button transparent onPress={() => this.props.navigation.navigate('notification')}>
+                        <Button transparent onPress={() => this.props.navigation.navigate( this.props.auth == null ? 'login' : 'notification')}>
                             <Icon name='ios-notifications' type='Ionicons' style={{ color: '#fff', fontSize: 30, marginTop: 5 }} />
                         </Button>
                     </Right>
