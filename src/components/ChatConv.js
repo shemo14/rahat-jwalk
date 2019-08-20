@@ -1,11 +1,23 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Animated, FlatList, KeyboardAvoidingView, Dimensions, ScrollView , Platform } from 'react-native';
+import {
+	View,
+	Text,
+	Image,
+	Animated,
+	FlatList,
+	KeyboardAvoidingView,
+	Dimensions,
+	ScrollView,
+	Platform,
+	ActivityIndicator
+} from 'react-native';
 import { Button, Icon, Container, Header, Right, Body, Content, Left , Card, CardItem, Thumbnail , Item, Input, Form } from 'native-base';
 import { DoubleBounce } from 'react-native-loader';
 import axios from 'axios';
 import CONST from '../consts';
 import {connect} from "react-redux";
 import {Notifications} from "expo";
+import {Spinner} from "../common";
 
 
 const width = Dimensions.get('window').width;
@@ -23,7 +35,8 @@ class ChatConv extends Component{
             messages : [],
             key: null,
             msg: null,
-            refreshed: false
+            refreshed: false,
+            isLoad: false
         }
     }
 
@@ -46,6 +59,25 @@ class ChatConv extends Component{
         this.componentWillMount();
     }
 
+	renderLoading(){
+		if (this.state.isLoad){
+			return(<ActivityIndicator color='#eebc47' size={ 'large' }/>);
+		}
+
+		if (this.state.msg === '' || this.state.msg === null){
+			return (
+				<Button disabled rounded style={{ zIndex:-1,backgroundColor: '#eee', justifyContent: 'flex-end', height: 45  , width:45 ,borderRadius:50, marginLeft:15 , top:5}}>
+					<Icon name={'send'} type={'FontAwesome'} style={{  color: "#fff" , fontSize:17 , top : -2 , right:-2 }}/>
+				</Button>
+			);
+		}
+
+		return (
+			<Button onPress={() => this.sendMessage()} rounded style={{ zIndex:-1,backgroundColor: '#eebc47', justifyContent: 'flex-end', height: 45  , width:45 ,borderRadius:50, marginLeft:15 , top:5}}>
+				<Icon name={'send'} type={'FontAwesome'} style={{  color: "#fff" , fontSize:17 , top : -2 , right:-2 }}/>
+			</Button>
+		);
+	}
 
     renderItem(item, i){
 
@@ -89,9 +121,13 @@ class ChatConv extends Component{
     }
 
     sendMessage(){
+        this.setState({ isLoad: true });
         let receiverId = this.state.receiverId;
         if (receiverId == this.props.auth.data.id)
-            receiverId = this.state.senderId
+            receiverId = this.state.senderId;
+
+
+        console.log('reciver_id', receiverId);
 
         this.setState({ refreshed: true })
         axios.post( CONST.url + 'sendMsg', {
@@ -100,10 +136,12 @@ class ChatConv extends Component{
             sender_id: this.props.auth.data.id,
             receiver_id: receiverId
 
-        }).then(response => this.setState({ messages: response.data.data, key: response.data.key, refreshed: false, msg: '' }))
+        }).then(response => this.setState({ messages: response.data.data, key: response.data.key, refreshed: false, msg: '', isLoad: false }))
     }
    
     render(){
+        console.log('state id', this.state.receiverId);
+
         return(
             <Container>
                 <Header style={{ height: 70, backgroundColor: '#437c1a', paddingTop: 15 }}>
@@ -134,9 +172,7 @@ class ChatConv extends Component{
                         }
                     </ScrollView>    
                     <View style={{ backgroundColor:'#fff' , borderTopWidth:3 , borderColor:'#eee' , flexDirection:'row' , flex: 1, width: '100%',height:60, position:'absolute' , bottom:0}}>
-                                <Button onPress={() => this.sendMessage()} rounded style={{ zIndex:-1,backgroundColor: '#eebc47', justifyContent: 'flex-end', height: 45  , width:45 ,borderRadius:50, marginLeft:15 , top:5}}>
-                                    <Icon name={'send'} type={'FontAwesome'} style={{  color: "#fff" , fontSize:17 , top : -2 , right:-2 }}/>
-                                </Button>
+                                { this.renderLoading() }
                                 <Item  style={{flex:1,zIndex:2222 , borderWidth:1 , borderColor:'#eee', borderRadius:50, height:45 , alignSelf:'flex-end' , marginBottom:5}}>
                                     <Input placeholder="أكتب رسالتك..." onChangeText={(msg) => this.setState({ msg })} value={this.state.msg}
                                            style={{ flex:1, width:'100%', paddingLeft:15 , paddingRight:15,marginRight:15 , borderWidth:1 , borderColor:'#eee', borderRadius:50, paddingBottom:10 , color: '#797979' , textAlign:'right' , backgroundColor:'#fff'}}

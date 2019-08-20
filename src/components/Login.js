@@ -32,8 +32,7 @@ class Login extends Component{
         const err = this.validate();
         if (!err){
             this.setState({ loader: true });
-            const {phone, password } = this.state;
-            const token = '111111';
+            const {phone, password, token } = this.state;
             this.props.userLogin({ phone, password, token });
         }
 
@@ -188,9 +187,9 @@ class Login extends Component{
                                         <Text style={{ color: '#8c8c8c', textDecorationLine: "underline", marginBottom: 10 }}> لا تمتلك حساب ؟</Text>
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('drawerNavigation')}>
-                                        <Text style={{ color: '#8c8c8c', textDecorationLine: "underline" }}> الدخول كزائر</Text>
-                                    </TouchableOpacity>
+                                    {/*<TouchableOpacity onPress={() => this.props.navigation.navigate('drawerNavigation')}>*/}
+                                        {/*<Text style={{ color: '#8c8c8c', textDecorationLine: "underline" }}> الدخول كزائر</Text>*/}
+                                    {/*</TouchableOpacity>*/}
                                 </View>
 
                             </View>

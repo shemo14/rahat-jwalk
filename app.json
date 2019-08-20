@@ -4,12 +4,12 @@
     "description": "This project is really great.",
     "slug": "rahat-jwalk",
     "privacy": "public",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "33.0.0",
     "platforms": [
       "ios",
       "android"
     ],
-    "version": "2.6.2",
+    "version": "2.6.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -40,7 +40,7 @@
     },
     "android": {
       "package": "com.rahat.jawalak",
-      "versionCode": 4,
+      "versionCode": 8,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDDGCkEv3jHUzSA1FVI26h_OadsG297Pe8"

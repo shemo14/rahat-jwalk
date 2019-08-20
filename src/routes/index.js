@@ -82,13 +82,6 @@ const drawerNavigation = createDrawerNavigator({
            drawerIcon: ( <Icon style={{ fontSize: 20, color: '#437c1a' }} type={'MaterialCommunityIcons'} name={'logout'}/> )
        }
    },
-   signIn: {
-       screen: DrawerTabs,
-       navigationOptions: {
-           drawerLabel: 'تسجيل الدخول',
-           drawerIcon: ( <Icon style={{ fontSize: 20, color: '#437c1a' }} type={'MaterialCommunityIcons'} name={'login'}/> )
-       }
-   },
 },
     {
         initialRouteName: 'home',

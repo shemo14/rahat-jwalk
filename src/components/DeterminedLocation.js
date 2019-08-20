@@ -186,6 +186,8 @@ class DeterminedLocation extends Component{
                 // this.props.navigation.navigate('confirmOrder');
             }).catch(() => this.setState({ loader: false }));
 
+            console.log('cord', this.state.selectedLocation);
+
             this.props.navigation.navigate('confirmOrder');
         } else
             this.props.navigation.navigate('login')

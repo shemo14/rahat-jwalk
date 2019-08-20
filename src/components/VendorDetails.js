@@ -75,7 +75,7 @@ class VendorDetails extends Component{
                             <View style={{ backgroundColor: '#f7f7f9', borderWidth: 1, borderColor: '#f6f6f6', borderRadius: 5, height: 40, width: 200, alignItems: 'center', justifyContent: 'center', marginTop: 5 }}>
                                 <Text style={{ color: '#989899', fontSize: 20 }}>{ this.state.vendorData.provider_name }</Text>
                             </View>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('chatConv', { orderId: this.state.orderId, vendorData: this.state.vendorData })} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 5, borderBottomWidth: 1, borderColor: '#74a66e' }}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('chatConv', { orderId: this.state.orderId, vendorData: this.state.vendorData, receiverId: this.state.vendorData.provider_id })} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: 5, borderBottomWidth: 1, borderColor: '#74a66e' }}>
                                 <Icon name={'ios-chatbubbles'} style={{ color: '#74a66e' }} type={"Ionicons"} />
                                 <Text style={{ color: '#74a66e', fontSize: 18, marginHorizontal: 5 }}>ابدأ المحادثة</Text>
                             </TouchableOpacity>

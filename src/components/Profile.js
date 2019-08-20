@@ -143,6 +143,14 @@ class Profile extends Component{
 		);
 	}
 
+	async componentWillMount(){
+		const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({});
+		const userLocation = { latitude, longitude };
+		this.setState({  initMap: false, userLocation });
+
+		console.log(this.state.userLocation.latitude, this.state.userLocation.longitude);
+	}
+
 	async componentDidMount(){
 		const { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({});
 		const userLocation = { latitude, longitude };
@@ -155,7 +163,7 @@ class Profile extends Component{
 
 		let endPoint = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=';
 		endPoint += this.state.query;
-		endPoint += '&key=AIzaSyBPftOQyR7e_2mv9MRu-TeNoW2qaOEK0fw&language=ar';
+		endPoint += '&key=AIzaSyDYjCVA8YFhqN2pGiW4I8BCwhlxThs1Lc0&language=ar';
 
 		try {
 			const { data } = await axios.get(endPoint);

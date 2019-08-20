@@ -18,8 +18,8 @@
           <option name="port" value="21" />
         </fileTransfer>
       </webServer>
-      <webServer id="b320066d-8428-4fce-9be0-0b2168828199" name="rahat-jwalk" url="http://rahat.aait-sa.com">
-        <fileTransfer host="rahat.aait-sa.com" port="21" rootFolder="/public_html">
+      <webServer id="b320066d-8428-4fce-9be0-0b2168828199" name="rahat-jwalk" url="http://88.198.41.35">
+        <fileTransfer host="88.198.41.35" port="21" rootFolder="/public_html">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

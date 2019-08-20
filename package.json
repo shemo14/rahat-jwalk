@@ -11,10 +11,10 @@
   "dependencies": {
     "@expo/vector-icons": "8.1.0",
     "axios": "^0.18.0",
-    "expo": "32.0.0",
+    "expo": "33.0.0",
     "native-base": "^2.12.1",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-circular-progress": "^1.0.1",
     "react-native-communications": "^2.2.1",
     "react-native-loader": "^1.2.1",
@@ -31,6 +31,7 @@
   "devDependencies": {
     "babel-preset-expo": "^5.0.0",
     "reactotron-react-native": "^2.1.0",
-    "reactotron-redux": "^2.1.0"
+    "reactotron-redux": "^2.1.0",
+    "schedule": "^0.4.0"
   }
 }

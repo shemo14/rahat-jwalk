@@ -77,8 +77,8 @@ class Notification extends Component{
 
                                             <TouchableOpacity onPress={() => this.props.navigation.navigate('noti')} style={{flex:1 , width:'100%'}}>
                                                 <Body style={{borderWidth:1 , borderRadius:20 , borderColor: '#eee', marginLeft:0 , paddingHorizontal:15 , paddingVertical:10 , width: '100%'}} >
-                                                    <Text style={{color: '#eebc47', fontSize: 15}}>{ notification.sender_name }</Text>
-                                                    <Text note style={{color: '#868686',fontSize: 13, writingDirection: 'rtl' }}>{ notification.desc }</Text>
+                                                    <Text style={{color: '#eebc47', fontSize: 15, alignSelf: 'flex-start'}}>{ notification.sender_name }</Text>
+                                                    <Text note style={{color: '#868686',fontSize: 13, writingDirection: 'rtl', alignSelf: 'flex-start' }}>{ notification.desc }</Text>
                                                     <Text note style={{ color: '#bbb',fontSize: 13 , alignSelf:'flex-end'}}>{ notification.for_time }</Text>
                                                     <TouchableOpacity onPress={() => this.deleteNotification(notification.id)} style={{backgroundColor:'#eee' , borderRadius:50 , borderWidth:1 , borderColor:'#eee' , position:'absolute' , width:20 , height:20 , right:-3 ,justifyContent:'center' , alignItems:'center' , top:- 5}}>
                                                         <Icon name={'close'} type='EvilIcons' style={{ color: '#eebc47' , fontSize: 17 }}  />
